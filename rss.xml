@@ -1,0 +1,137 @@
+<?xml version='1.0' encoding='utf-8'?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>Ailoot Article Library</title>
+    <link>https://github.com/provod-ai/ailoot-article-library</link>
+    <description>Guides to AI APIs, model routing and agent integrations.</description>
+    <language>en</language>
+    <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What are AI agents? Types and examples</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100226.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100226.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/what-are-ai-agents-types-and-examples/</dc:source>
+      <pubDate>Mon, 23 Nov 2026 19:36:44 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;What are AI agents? Types and examples&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn how AI agents perceive, reason and act, explore common agent types and use cases, and review their benefits, limitations and implementation steps.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;AI agents are autonomous software components designed to perform tasks with limited human intervention. They can interact with applications and APIs, access data, reason, make decisions and take actions toward defined goals. Some agents also use feedback and prior outcomes to refine later decisions. Organizations can delegate repetitive work to agents, freeing people to focus on more complex tasks.&lt;/p&gt;
+&lt;h2&gt;How do AI agents work?&lt;/h2&gt;
+&lt;p&gt;AI agents use machine learning (ML) and techniques such as natural language processing (NLP) for tasks ranging from simple queries to complex problem-solving. Agents commonly follow a cycle of perception, reasoning and action, sometimes described as sensing, thinking and acting. A workflow may define a goal from user input, divide it into subtasks and execute them using production data, knowledge bases, the Web or other tools.&lt;/p&gt;
+&lt;p&gt;The following are common operational steps:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Define goals.&lt;/strong&gt; The process begins when an agent receives instructions or a goal from a user. These instructions guide its subsequent actions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Gather and process data.&lt;/strong&gt; An agent gathers and processes information through sensors, inputs or data sources. This is the perception or sensing phase. For example, an autonomous car uses sensors to collect data about roads, traffic and obstacles, while a chatbot receives user queries.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Organize and plan tasks.&lt;/strong&gt; The agent breaks a goal into smaller, actionable tasks. This is the reasoning phase. One agent can handle the subtasks, or delegate them to specialized subagents.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Execute tasks.&lt;/strong&gt; The agent uses tools and techniques, such as a large language model (LLM), to perform tasks and manage complex activities. The outcome might be a real-world action through an actuator, a decision or a recommendation.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Seek external feedback.&lt;/strong&gt; After completing a task, the agent reviews progress toward the goal, seeks feedback and examines logs. This learning phase can generate additional tasks and help refine later decisions.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;What are the agent function and program in an AI agent architecture?&lt;/h2&gt;
+&lt;p&gt;An AI agent architecture is a framework that enables an agent or system to perceive, reason and act in its environment. It can be physical, as in a robot with actuators, sensors, motors and robotic arms, or digital, as in software agents and content generators that use prompts, application programming interfaces and databases. The agent function and agent program are two components of these architectures.&lt;/p&gt;
+&lt;h3&gt;Agent function&lt;/h3&gt;
+&lt;p&gt;The agent function describes how an agent responds to its environment. It represents the ideal or theoretical response to each possible situation, mapping perceptions or environmental data to actions. Before designing it, developers typically consider the information, capabilities, knowledge base, feedback mechanisms and other technologies required.&lt;/p&gt;
+&lt;h3&gt;Agent program&lt;/h3&gt;
+&lt;p&gt;An agent program is the code implemented on hardware to put an agent to work in a chosen system. It is intended to make the agent perform as designed, meet technical requirements and operate efficiently. The program should implement the function, though practical limitations or exceptions can occur.&lt;/p&gt;
+&lt;h2&gt;How can AI agents be used?&lt;/h2&gt;
+&lt;p&gt;Organizations use AI agents across industries to support processes and automate tasks. Examples include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Customer support.&lt;/strong&gt; Agents can respond to inquiries, manage refunds and provide technical support. They can offer round-the-clock assistance and serve as virtual assistants in apps and websites.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Finance.&lt;/strong&gt; Agents can automate routine work such as risk assessment and transaction processing. Analysis of large data sets can also inform financial decisions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Healthcare.&lt;/strong&gt; Agents can answer inquiries, schedule appointments, review insurance, prepare medical summaries and process care requests. They can also analyze biological data, support drug discovery, personalize treatment plans, manage records and match patients to clinical trials. Multiagent systems can be used for complex healthcare problems.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Manufacturing.&lt;/strong&gt; Agents can support quality control, predictive maintenance and supply chain optimization. Analysis of real-time data can help identify issues, adjust production schedules and improve product quality.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Insurance.&lt;/strong&gt; Agents can automate claims processing, risk assessments and responses to customer inquiries. They can analyze large volumes of data to support policy recommendations, fraud detection and administrative processes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Autonomous vehicles.&lt;/strong&gt; Agents can help vehicles perceive their surroundings and make decisions, such as when to turn or brake. Sensors can help detect stop signs, navigate unfamiliar terrain and respond to changing conditions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Smart environments.&lt;/strong&gt; Agents can automate buildings and urban environments. Building sensors can detect people, control access and adjust lighting and heating or cooling. At the municipal level, agents can use IoT data about road and traffic conditions to inform traffic controls and street lighting.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Workplace automation.&lt;/strong&gt; Agents can handle routine business processes, such as document intake, data entry and scheduling, helping employees focus on other work.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Benefits and limitations of AI agents&lt;/h2&gt;
+&lt;p&gt;AI agents have potential benefits as well as limitations. Organizations need to account for both when deciding how to use them.&lt;/p&gt;
+&lt;h3&gt;Advantages of AI agents&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Increased efficiency.&lt;/strong&gt; Automating repetitive tasks, such as answering inquiries, scheduling appointments and processing claims, can free people to focus on more complex work. Automation can also reduce time spent on tasks that are prone to human error.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Enhanced decision-making.&lt;/strong&gt; ML algorithms can analyze large amounts of data and provide insights for business decisions, research and software development.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Improved accuracy.&lt;/strong&gt; Agents can follow rules and guardrails and analyze patterns to support tasks such as data entry, diagnostics and financial analysis. Their output still requires appropriate oversight.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Personalization.&lt;/strong&gt; Agents can use information about individual preferences and behavior to tailor experiences, such as buying recommendations or treatment plans.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Comprehensive responses.&lt;/strong&gt; Agents can combine interaction with other agents, external tools and feedback to provide responses that may be more comprehensive than those of systems without these capabilities.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Learning and adaptability.&lt;/strong&gt; Some agents use feedback and new data to adjust their performance over time.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Limitations of AI agents&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Limited understanding.&lt;/strong&gt; Agents that rely on predefined rules can struggle with nuanced situations that require a deeper understanding of context. Complex exceptions may require human direction.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Context and hallucinations.&lt;/strong&gt; An agent can produce inadequate or incorrect results. Limited context windows may cause it to lose earlier information, and it may generate false information presented as factual. These issues need to be addressed in agent design and development.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Adaptability issues.&lt;/strong&gt; Some agents adapt only within specific environments or tasks and may struggle in dynamic or unpredictable situations. Specialized agents and coordinated workflows are approaches used for narrower tasks.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ethical issues.&lt;/strong&gt; Deep learning systems can produce biased or inaccurate results because of data or algorithmic bias. Human oversight and explainability can help address these risks and support fair, useful responses. Errors can also affect an organization&amp;#x27;s reputation and compliance.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Initial investment costs.&lt;/strong&gt; Technology and training can require substantial upfront investment, which may deter some organizations.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Infinite feedback loops.&lt;/strong&gt; An agent&amp;#x27;s actions can unintentionally trigger a chain of actions that returns to the original action and repeats. For instance, an agent intended to optimize a system might make a change that worsens performance, then make further changes that compound the problem.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Security and privacy concerns.&lt;/strong&gt; Agent data may include sensitive personal or business information, raising concerns about breaches, misuse and privacy violations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;The different types of AI agents&lt;/h2&gt;
+&lt;p&gt;AI agents can be grouped by their characteristics, functionality and the complexity of the tasks they handle. Common types include:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Simple reflex agents.&lt;/strong&gt; These agents use predefined rules and have no memory or ability to learn from past experience. They respond to current stimuli, making them suitable for straightforward tasks.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Model-based reflex agents.&lt;/strong&gt; These agents maintain an internal state representing the environment. They can consider current and past inputs when making decisions and adapting to changes.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Goal-based agents.&lt;/strong&gt; These agents evaluate different ways to reach a desired outcome. They can be suited to complex tasks, including NLP and robotics applications.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Utility-based agents.&lt;/strong&gt; These agents use utility functions to prioritize outcomes according to their perceived value. They choose actions intended to maximize utility in situations involving tradeoffs.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Learning agents.&lt;/strong&gt; These agents use experience and past interactions to adjust their performance, refine decisions and respond to new situations. A virtual assistant, for example, might use information about a customer&amp;#x27;s preferences to tailor its service.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Hierarchical agents.&lt;/strong&gt; These agents use a hierarchy in which higher-level agents direct lower-level agents toward a shared goal. This can divide a complex process into simpler tasks with distinct responsibilities.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multiagent orchestration.&lt;/strong&gt; Multiple agents can share information and collaborate on complex goals. Their interactions can be coordinated into agentic workflows.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;How to effectively implement AI agents&lt;/h2&gt;
+&lt;p&gt;AI agents are used in areas including drug discovery, fraud detection and supply chain optimization. Implementing them calls for planning, design, development, deployment and monitoring. These steps can help guide the process:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Define clear objectives.&lt;/strong&gt; Identify what the agents should achieve, such as automating workflows, improving customer service or supporting decision-making. Clear objectives guide development and deployment.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Gather and prepare data.&lt;/strong&gt; Agents rely on structured and unstructured data. Ensure that relevant, high-quality data is available to provide context for their tasks. This might include knowledge articles for complex queries and structured data for personalized interactions. Data science specialists can help obtain, validate and prepare data.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Select the agent type.&lt;/strong&gt; Choose a type suited to the task. A reactive agent might be sufficient for routine customer queries, while tasks requiring adaptability may call for a goal-oriented or learning agent. Consider suitable ML algorithms and operational parameters early in development.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Consider integration needs with existing systems.&lt;/strong&gt; Plan how the agent will integrate with systems such as customer relationship management and customer service tools so it can access relevant data.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Assemble the development team.&lt;/strong&gt; Identify the people responsible for preparing data and developing the agent. The programming languages, platforms and technologies depend on the team&amp;#x27;s skills. Roles might include ML engineers, data scientists, DevOps engineers, and user interface and experience designers. Business leaders can help ensure alignment with business goals and risk requirements.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Select tools and technologies.&lt;/strong&gt; Choose a suitable technology stack, which might include ML frameworks, programming languages such as Python and Java, and tools for data processing and model development.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Design the AI agent.&lt;/strong&gt; Define how the agent interacts with users, accesses data and performs tasks. Complex agents may use a hierarchy in which higher-level agents direct lower-level agents. Work involving multiple agents may require orchestration. Testing and validation are part of this phase.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Train the AI agent.&lt;/strong&gt; Use curated data to train the agent, helping it learn patterns, make predictions and refine its decisions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Test and deploy the AI agent.&lt;/strong&gt; Test the agent in a controlled environment across different scenarios and address issues found. After training and testing, deploy it in its intended environment, such as a local data center or public cloud infrastructure. Early deployments can limit access to selected users while reliability and explainability are evaluated. Consider scalability as user and production data volumes grow.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Monitor and improve the agent.&lt;/strong&gt; Monitor performance, gather feedback and analyze outcomes. Use these findings to make improvements, update the agent, enforce data access and security controls, and respond to changes in user behavior and the business environment.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Difference between nonagent chatbots, AI assistants, AI agents and generative AI&lt;/h2&gt;
+&lt;p&gt;Nonagent chatbots, AI assistants, AI agents and generative AI are all designed to assist users, but differ in capabilities, complexity and applications.&lt;/p&gt;
+&lt;h3&gt;Nonagent chatbots&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Functionality.&lt;/strong&gt; Nonagent chatbots typically use predefined scripts and decision trees. They can handle simple queries and provide basic information, such as answers to frequently asked questions, but may lack the depth and adaptability of agents.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Complexity.&lt;/strong&gt; These chatbots are simpler to implement, but their predefined rules can make it difficult to handle complex or unexpected queries.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;User experience.&lt;/strong&gt; Scripted interactions can feel rigid, particularly when users ask questions outside the chatbot&amp;#x27;s scope.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Investment costs.&lt;/strong&gt; Chatbots can be easier and less expensive to deploy, making them an option for businesses with limited technical resources.&lt;/p&gt;
+&lt;h3&gt;AI assistants&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Functionality.&lt;/strong&gt; AI assistants offer more advanced conversational capabilities and context awareness than chatbots, but may have less independent functionality than autonomous agents.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Complexity.&lt;/strong&gt; Assistants can use LLMs to interpret nuance and respond to unfamiliar or complex requests.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;User experience.&lt;/strong&gt; They can provide flexible, conversational interactions and adjust responses to context.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Investment costs.&lt;/strong&gt; Assistants may require more upfront investment than chatbots, while their broader capabilities can automate more sophisticated tasks.&lt;/p&gt;
+&lt;h3&gt;AI agents&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Functionality.&lt;/strong&gt; Agents can perform tasks autonomously and adapt to a range of situations. They can support people across domains beyond customer service.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Complexity.&lt;/strong&gt; Agentic systems can require ML, NLP and other technologies to interpret context and perform tasks. Their suitability depends on their capabilities and the complexity of the application.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;User experience.&lt;/strong&gt; Agents can handle multiturn conversations and tailor responses to context, behavior and preferences.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Investment costs.&lt;/strong&gt; Developing and operating agents can require a skilled team, models, hardware and integration with existing infrastructure. Data collection, storage and processing can add costs.&lt;/p&gt;
+&lt;h3&gt;Generative AI&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Functionality.&lt;/strong&gt; Generative AI focuses on producing new content, such as text, images, music and artwork, using models trained on data. It does not necessarily perform tasks autonomously.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Complexity.&lt;/strong&gt; Generative AI models, including conversational systems, can use deep learning and large data sets to generate outputs. Training and operation can require substantial computational resources.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;User experience.&lt;/strong&gt; Users can provide prompts and engage in conversations that respond to their input, including open-ended questions.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Investment costs.&lt;/strong&gt; Training and operating generative AI models can require substantial investment in data, computing resources and maintenance.&lt;/p&gt;
+&lt;figure&gt;
+
+&lt;em&gt;&lt;/em&gt;
+&lt;figcaption&gt;&lt;em&gt;&lt;/em&gt;Several key attributes distinguish AI agents from nonagent chatbots and generative AI.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2&gt;Future of AI agents&lt;/h2&gt;
+&lt;p&gt;Agents may become more capable of handling a wide range of tasks. Rather than placing more capabilities in larger, more complex agents, development may favor task-specific and specialized agents in defined industries. Workflow orchestration can connect agents so they collaborate on more complex tasks.&lt;/p&gt;
+&lt;p&gt;Agents may also become more autonomous as models and data sets improve and explainability becomes a key feature. This could enable them to learn and change their behavior with less human intervention or feedback.&lt;/p&gt;
+&lt;p&gt;Finally, agents may become more integrated with business applications, tools, systems, infrastructure and other agents. Interoperability may require standardized interfaces and protocols, which could pose challenges for legacy systems.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/what-are-ai-agents-types-and-examples/"&gt;What are AI agents? Types and examples&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With 1,284 models and variants across 15 categories, Ailoot is one of the world’s largest AI routers by model count. Explore &lt;a href="https://ailoot.ai/"&gt;Ailoot’s image to text API&lt;/a&gt; with a key issued by Ailoot. Work with Grok or DeepSeek for text and code, Seedream for images, Seedance for video, Scribe for audio transcription, Lyria for music, Tripo3D for 3D and BGE for semantic search.&lt;/p&gt;
+&lt;p&gt;“image recognition api” — Use Ailoot to analyze images and documents in one application. Add generated text and structured decisions via the same API.&lt;/p&gt;
+&lt;p&gt;Give every Ailoot project its own key and manage usage by project in your company workspace. Add photo editing from the same catalogue whenever the workflow needs it.&lt;/p&gt;
+&lt;p&gt;New flagship models are available on Ailoot at launch. One subscription covers the full catalogue, and subscriptions and promo codes can save up to 50% on official provider API prices. Find your current offers at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+    </item>
+  </channel>
+</rss>

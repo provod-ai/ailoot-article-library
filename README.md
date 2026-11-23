@@ -9,3 +9,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 - [Ailoot AI API gateway](https://ailoot.ai/)
 
 ## Articles
+
+[Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
+
+- [What are AI agents? Types and examples](articles/guide-100226.md)
