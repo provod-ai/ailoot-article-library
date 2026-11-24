@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Content Moderation API: The Complete Guide (2026)](articles/guide-100252.md)
 - [LLM as a Judge: The Complete Guide](articles/guide-100250.md)
 - [Complete Guide to Text-to-Speech APIs for Developers](articles/guide-100245.md)
 - [TTS APIs for Developers: Choosing Engines and Preparing for Production](articles/guide-100242.md)

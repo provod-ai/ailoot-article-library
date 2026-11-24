@@ -7,6 +7,60 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Content Moderation API: The Complete Guide (2026)</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100252.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100252.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/content-moderation-api-guide-2026/</dc:source>
+      <pubDate>Tue, 24 Nov 2026 17:03:12 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;Content Moderation API: The Complete Guide (2026)&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn what content moderation APIs detect, how they work, how to choose a provider, and what to consider when comparing pricing and use cases.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;What a content moderation API is&lt;/h2&gt;
+&lt;p&gt;A content moderation API is a service you send user-generated content to and get back a real-time decision: whether it violates your policy, which category it hits, and how confident the system is. It lets you add moderation with a single HTTP call instead of building and hosting your own models.&lt;/p&gt;
+&lt;h2&gt;How it works&lt;/h2&gt;
+&lt;p&gt;You POST a message or image to the API. It normalizes the text to address evasion such as leetspeak and Unicode look-alikes, runs it through classifiers or a language model, and scores it across categories. If a score crosses your threshold, you get a flag and a reason, and your app decides what to do: block, hide, warn, or queue for review. Some systems let you define the policy yourself rather than use a fixed taxonomy.&lt;/p&gt;
+&lt;h2&gt;What it detects&lt;/h2&gt;
+&lt;p&gt;Common categories include hate and discrimination, harassment, sexual content, violence, self-harm, dangerous content, personally identifiable information (PII), profanity, and spam. Platforms with younger users may also need grooming detection. A moderation API may let you tune each category&amp;#x27;s threshold and add a custom rule for anything the standard categories miss.&lt;/p&gt;
+&lt;h2&gt;How to choose one&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Content type:&lt;/strong&gt; text, image, voice, or video, since not every API covers all of them.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Fixed categories vs. custom policy:&lt;/strong&gt; can you express your exact rules, or only choose from the provider’s categories?&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Compliance:&lt;/strong&gt; PII redaction, COPPA, and EU or UK data residency for GDPR.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cost model:&lt;/strong&gt; per-1,000 pricing, free tier, minimums, and lock-in.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Latency and evasion resistance&lt;/strong&gt; for real-time chat.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Pricing&lt;/h2&gt;
+&lt;p&gt;Pricing varies by provider and content type. When comparing plans, check per-1,000 pricing, free tiers, minimums, and whether multimodal features are included. Verify current prices directly with each provider.&lt;/p&gt;
+&lt;h2&gt;By use case&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Gaming chat moderation: real-time detection with evasion resistance and age-appropriate safeguards.&lt;/li&gt;
+&lt;li&gt;Forums and communities: moderate posts and comments at scale.&lt;/li&gt;
+&lt;li&gt;Marketing campaigns: automatically moderate social and ad comments.&lt;/li&gt;
+&lt;li&gt;Profanity filtering: go beyond static word lists.&lt;/li&gt;
+&lt;li&gt;Unity and Roblox game integrations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;How to get started&lt;/h2&gt;
+&lt;p&gt;Test representative messages and images, then review the API documentation and integration requirements. Define your moderation policy, choose thresholds for each category, and decide how your app will handle flags, including whether to block, hide, warn, or queue content for review.&lt;/p&gt;
+&lt;h2&gt;Frequently Asked Questions&lt;/h2&gt;
+&lt;h3&gt;What is a content moderation API?&lt;/h3&gt;
+&lt;p&gt;A service you send user content to and get back a real-time policy decision, so you can add moderation with an HTTP call instead of building your own models.&lt;/p&gt;
+&lt;h3&gt;How do I choose one?&lt;/h3&gt;
+&lt;p&gt;Match it to your content type, whether you need custom policies, your budget, and compliance needs such as PII handling and data residency.&lt;/p&gt;
+&lt;h3&gt;How much does it cost?&lt;/h3&gt;
+&lt;p&gt;Pricing depends on the provider, content type, and plan. Compare current pricing, free tiers, minimums, and the features included in each plan.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/content-moderation-api-guide-2026/"&gt;Content Moderation API: The Complete Guide (2026)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Explore &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt; for your next project. Developers can use one Ailoot-issued key for 1,284 models and variants across 15 categories, putting Ailoot among the world’s largest AI routers by model count. Work across media on one balance. Edit photos with GPT Image 2.6 Sunburst, generate video with Veo, transcribe audio with Scribe, create music with Lyria or build 3D assets with Tripo3D. Add Qwen4 Max for code or BGE embeddings for search.&lt;/p&gt;
+&lt;p&gt;“ai content moderation api” — Ailoot brings Mercury Decide into the same API as models for document reading, text analysis and structured results.&lt;/p&gt;
+&lt;p&gt;Use an Ailoot project key to connect classification and next-step selection to your own software. The Ailoot commercial licence covers these features in a paid product.&lt;/p&gt;
+&lt;p&gt;Ailoot adds new flagship models at launch, and one subscription covers the full catalogue. Find a promo code in your account at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>LLM as a Judge: The Complete Guide</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100250.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100250.md</guid>
