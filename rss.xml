@@ -7,6 +7,101 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>LLM as a Judge: The Complete Guide</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100250.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100250.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/llm-as-a-judge-complete-guide/</dc:source>
+      <pubDate>Tue, 24 Nov 2026 15:06:14 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;LLM as a Judge: The Complete Guide&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;LLM-as-a-judge is the practice of using one language model to evaluate another model’s outputs against a rubric, making scalable AI evaluation practical for chatbots, RAG systems, and agents. The article explains the three core judging modes, where LLM judges work well, where they fail, how to write reliable rubrics, and why calibration against a labelled gold set is mandatory before production use.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;LLM-as-a-judge is the practice of using one language model to evaluate another model’s outputs against a rubric, making scalable AI evaluation practical for chatbots, RAG systems, and agents. The article explains the three core judging modes, where LLM judges work well, where they fail, how to write reliable rubrics, and why calibration against a labelled gold set is mandatory before production use.&lt;/p&gt;
+&lt;h2&gt;What &amp;quot;LLM as a judge&amp;quot; actually means&lt;/h2&gt;
+&lt;p&gt;An LLM judge is a model called with a prompt that asks it to evaluate something, usually another model&amp;#x27;s response. It returns a score, a label, or a preference. That is the entire architecture. Everything interesting is in the prompt, the rubric, and how you measure whether the judge&amp;#x27;s verdicts agree with reality. The tradeoff is that the judge brings its own biases, and unlike human raters, those biases are systematic.&lt;/p&gt;
+&lt;h2&gt;How an LLM judge scores outputs&lt;/h2&gt;
+&lt;p&gt;There are three scoring modes, and the choice between them changes what your evaluation can and cannot tell you.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Pairwise comparison&lt;/strong&gt; asks the judge to pick which of two responses is better. Use pairwise when you are A/B testing two model versions or two prompts. Do not use it when you need an absolute quality threshold, because pairwise scores have no ground floor: response B can win every comparison and still be unusable..&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Single-answer grading with a rubric&lt;/strong&gt; asks the judge to score one response against an explicit standard. Pick the lowest-precision scale that captures the distinction you care about: binary pass/fail when the question is &amp;quot;did the model violate the rubric, yes or no,&amp;quot; a three-point scale (fail / partial / pass) when degrees of failure matter for triage, and only go to 1-to-5 or 1-to-10 if you genuinely need the resolution and have the gold-set data to validate that the judge can use it. Fine-grained scales invite the judge to invent distinctions it cannot defend, and the resulting noise eats the signal you wanted to measure. Rubric quality matters more than scale choice. A claim-level rubric (&amp;quot;score 0 if any factual claim is not directly supported by the retrieved passage&amp;quot;) gives you a number you can act on..&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reference-based grading&lt;/strong&gt; gives the judge a known-good answer and asks how close the candidate is to it. This is the closest analogue to traditional NLP metrics like BLEU and ROUGE, but with semantics rather than n-gram overlap. It works well for tasks with constrained outputs (translation, summarization against a gold summary, structured data extraction). It collapses on open-ended tasks, because there are usually many acceptable answers and the judge will penalise responses that are good but different.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In practice most production setups use single-answer grading per criterion (faithfulness, relevance, and format compliance) and use pairwise comparison only during development to choose between candidate prompts.&lt;/p&gt;
+&lt;h2&gt;When an LLM judge is the right tool&lt;/h2&gt;
+&lt;p&gt;An LLM judge works well on tasks where the judgment is essentially a reading-comprehension problem against a clearly stated rubric. &amp;quot;Does this response contain any factual claim not supported by the retrieved context?&amp;quot; is a reading-comprehension question. So is &amp;quot;Does this response refuse to answer in the cases the spec requires it to refuse?&amp;quot; The judge model has to extract the claim, locate the supporting passage (or note its absence), and return a verdict.&lt;/p&gt;
+&lt;p&gt;It works less well on tasks that require the judge to know things the prompt cannot encode. &amp;quot;Is this response funny?&amp;quot; is a question every model will answer, but the answers will reflect the judge&amp;#x27;s priors, not your readers&amp;#x27;. &amp;quot;Is this code idiomatic Rust?&amp;quot; requires the judge to have absorbed the same conventions as your team, which it probably has not. For these tasks, treat the judge as one signal among several rather than as ground truth.&lt;/p&gt;
+&lt;p&gt;It actively hurts on tasks where the cost of a missed failure is high and the failure pattern is rare. In those cases, the judge is a triage filter (it cuts the volume of cases human reviewers see), not the final word.&lt;/p&gt;
+&lt;h2&gt;A worked example: a faithfulness judging prompt&lt;/h2&gt;
+&lt;p&gt;The simplest useful judge is a single-answer faithfulness rubric for a RAG response.&lt;/p&gt;
+&lt;h3&gt;Faithfulness judge prompt&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;You are evaluating whether an assistant&amp;#x27;s response is faithful
+to a retrieved context passage. Faithful means every factual claim in the response
+is directly and explicitly supported by the context. A claim is unfaithful if it
+is added, modified, or drawn from outside the context.
+
+Steps:
+1. Enumerate every factual claim in the response (numbers, rules, entity names,
+   negations, comparisons).
+2. For each claim, locate the specific sentence in the context that supports it.
+3. If any claim has no direct support, the response is unfaithful.
+4. Truncated or cut-off context counts as zero support for whatever follows.
+
+Return JSON: {&amp;quot;verdict&amp;quot;: &amp;quot;faithful&amp;quot; | &amp;quot;unfaithful&amp;quot;, &amp;quot;reason&amp;quot;: &amp;quot;&amp;quot;}.
+
+CONTEXT:
+{context}
+
+RESPONSE:
+{response}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Truncated context is explicitly handled so the judge does not treat partial sentences as full support.&lt;/p&gt;
+&lt;p&gt;This is enough to run, not enough to ship. The next two sections cover the parts that turn a working example into a deployable judge: getting the prompt right, then measuring whether it actually agrees with humans.&lt;/p&gt;
+&lt;h2&gt;Writing the judge prompt and rubric&lt;/h2&gt;
+&lt;p&gt;The model is fixed by your provider, the scoring scale is fixed by your rubric design, and the gold set is fixed by your domain.&lt;/p&gt;
+&lt;p&gt;A working judge prompt has four elements. A definition of the criterion in the words your domain uses, not generic ML vocabulary (&amp;quot;faithful to the retrieved context&amp;quot; is a domain definition; &amp;quot;high quality&amp;quot; is not). An explicit reasoning structure that tells the judge to enumerate the discrete claims, conditions, or tool calls before scoring (this is chain-of-thought). A scoring rule that maps the reasoning result onto the scale, like &amp;quot;if any enumerated claim is not directly supported by the retrieved context, score 0,&amp;quot; not &amp;quot;use your judgment.&amp;quot; And a handling clause for the edge cases that show up in production: truncated context, empty retrievals, partial answers, refusals.&lt;/p&gt;
+&lt;p&gt;What you should not put in the prompt is a long list of &amp;quot;make sure your answer is helpful, honest, and harmless.&amp;quot; The other thing to avoid is over-specifying the format of the verdict; if the model has to produce a long structured rationale before its score, you are paying for tokens you will not read.&lt;/p&gt;
+&lt;h2&gt;The biases that make naive judges unreliable&lt;/h2&gt;
+&lt;p&gt;Three biases show up consistently enough that they have names.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Position bias&lt;/strong&gt; is the tendency to favour whichever response appears first (or sometimes last) in a pairwise comparison. The fix is to evaluate every comparison in both orders and only count cases where the verdict is consistent. .&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Verbosity bias&lt;/strong&gt; is the tendency to prefer longer responses. If your rubric does not say &amp;quot;concise responses score equal to or better than verbose ones at equivalent correctness,&amp;quot; your judge is implicitly optimising for length. The mitigation is to put length neutrality into the rubric explicitly..&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Self-preference bias&lt;/strong&gt; is the tendency for a judge to favour outputs from the same model family it belongs to. The size of this effect is contested (some replications find it small, others find it large), but it is large enough that you should not use Model A as the judge in an A-versus-B comparison if either A or B is Model A. Use a third model as judge, or use human raters for that specific comparison.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Calibrating the judge against a labelled gold set&lt;/h2&gt;
+&lt;p&gt;A judge prompt that looks reasonable on three examples will fail in production. The way to find out before deployment is calibration: run the judge against a labelled gold set, measure the gap between its verdicts and the human labels, and iterate the prompt until the gap closes.&lt;/p&gt;
+&lt;p&gt;The minimum viable calibration loop has three inputs. A gold set drawn from the actual evaluation distribution and labelled by domain experts. A baseline run that records multiple metrics, not just one. An optimization step that rewrites the prompt against the worst-performing examples.&lt;/p&gt;
+&lt;p&gt;Why all seven metrics, not just accuracy: aggregate accuracy hides per-class recall. Reporting accuracy alone is the most common mistake teams make when they think they have a working judge.&lt;/p&gt;
+&lt;h2&gt;Building the gold set&lt;/h2&gt;
+&lt;p&gt;Calibration depends on a gold set, and gold sets do not exist by default. Building one is the prerequisite step that determines whether everything downstream is measuring something real or measuring noise.&lt;/p&gt;
+&lt;p&gt;A gold set is a collection of input-output pairs labelled by domain experts with the verdict you want the judge to produce. Three properties make a gold set load-bearing for evaluation. It has to be drawn from the actual evaluation distribution: real queries, real retrieved contexts, real agent responses, not synthetic examples that look plausible to whoever wrote the dataset. The failure classes have to be represented. Inter-rater agreement on the gold set should be measured before it is used.&lt;/p&gt;
+&lt;p&gt;Generating the queries and synthetic-but-realistic answers for a gold set is its own engineering problem. Several frameworks now exist to do this from your source documents, and the differences between them affect what kinds of failures the resulting gold set surfaces.&lt;/p&gt;
+&lt;h2&gt;Judge-human agreement is task-specific&lt;/h2&gt;
+&lt;p&gt;Agreement is not the same as alignment. The aggregate number flatters the judge; the per-class recall is what tells you whether to ship it. The calibration section above is what fixes this: measure both, fix the prompt against the failures, repeat.&lt;/p&gt;
+&lt;p&gt;Agreement metrics depend on the metric. Reporting raw accuracy on an imbalanced gold set (mostly passing examples, few failures) flatters the judge. Reporting Cohen&amp;#x27;s Kappa, which adjusts for chance agreement, is harder to fake. Pearson correlation is useful for continuous scores; Spearman holds up better if you only trust the ranking and not the absolute values.&lt;/p&gt;
+&lt;p&gt;For production pipelines, the floor is: measure on a labelled gold set, report at least accuracy plus Cohen&amp;#x27;s Kappa, and treat any single-metric claim with suspicion.&lt;/p&gt;
+&lt;p&gt;The decision of when to use an LLM judge alone, when to use it as a triage filter with humans on the flagged subset, and when to skip the judge and use humans-only depends on three variables: the cost of a missed failure, the volume of evaluations, and the rate at which the evaluation distribution drifts.&lt;/p&gt;
+&lt;h2&gt;From example to production: wiring the judge in&lt;/h2&gt;
+&lt;p&gt;Putting a judge in front of every production response (or running it on every pull request in CI) is a different engineering problem.&lt;/p&gt;
+&lt;p&gt;The bits that come up at scale are unsexy. Batching requests so judge inference does not dominate end-to-end latency. Retry handling for the cases where the judge returns malformed JSON, exceeds rate limits, or times out. Structured logging of verdicts and reasoning traces so you can diagnose later why a specific case was flagged. Regression detection that fires when alignment on the canary gold set drops between deploys. Versioning of judge prompts the same way you version the application code, so you can attribute alignment changes to specific prompt edits. And integration with your CI system so a judge run is part of the deploy gate rather than a manual check someone forgets to do under time pressure.&lt;/p&gt;
+&lt;p&gt;None of these are intellectually hard. All of them are work, and the order in which you implement them affects which production failures you hit first. The mistake most teams make is shipping the prompt-and-eval loop without versioning, then losing the ability to attribute regressions when alignment shifts.&lt;/p&gt;
+&lt;h2&gt;When NOT to use an LLM judge&lt;/h2&gt;
+&lt;p&gt;Three situations where you should not reach for a judge, and where teams routinely do anyway.&lt;/p&gt;
+&lt;p&gt;When the task has a deterministic correctness check, do not use a judge. SQL query equivalence, JSON schema validation, regex matching, exact-string comparison, and tool-call argument matching are all solved problems. An LLM judge wrapping any of these adds latency, cost, and a non-zero chance of being wrong about something that has a definitive answer. Run the deterministic check, fail fast on mismatch, and only call the judge for the parts that genuinely require natural-language reasoning.&lt;/p&gt;
+&lt;p&gt;When you have not built a labelled gold set, do not use a judge in production. The judge gives you a number. Without ground truth, you cannot tell whether the number means anything. The gold set has to exist.&lt;/p&gt;
+&lt;p&gt;When the cost of a missed failure exceeds the cost of human review, do not use a judge as the final gate. Use it as a triage filter that cuts the volume of cases humans review. A judge deployed without a human in the loop in a regulated domain is a different decision, and one that should be made explicitly with the legal and compliance functions involved, not implicitly because the judge happened to score high on a dev-set.&lt;/p&gt;
+&lt;p&gt;The judge is a tool, not a verdict. It earns its place by catching the failures you would otherwise ship. It loses its place the moment you stop measuring whether it still does.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/llm-as-a-judge-complete-guide/"&gt;LLM as a Judge: The Complete Guide&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With 1,284 models and variants across 15 categories, Ailoot is one of the world’s largest AI routers by model count. Explore &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt; with a key issued by Ailoot. Work with Grok or DeepSeek for text and code, Seedream for images, Seedance for video, Scribe for audio transcription, Lyria for music, Tripo3D for 3D and BGE for semantic search.&lt;/p&gt;
+&lt;p&gt;“llm evaluation api” — Put GPT, Claude, Gemini and DeepSeek to work in your app through one Ailoot key. Add document analysis, images, speech and video from the same balance.&lt;/p&gt;
+&lt;p&gt;Use Ailoot Arena to compare models and agents, or bring Ailoot into an editor, CLI, SDK or automation tool through one of 77 integrations.&lt;/p&gt;
+&lt;p&gt;Ailoot adds new flagship models at launch, and one subscription covers the full catalogue. Find a promo code in your account at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>Complete Guide to Text-to-Speech APIs for Developers</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100245.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100245.md</guid>
