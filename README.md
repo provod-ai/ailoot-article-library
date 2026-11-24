@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [AI agent examples: 12 real ones running in businesses](articles/guide-100235.md)
 - [15 Practical AI Agent Examples Across Industries](articles/guide-100234.md)
 - [What Is AI Chat? Definition, How It Works, and Key Benefits](articles/guide-100230.md)
 - [What Is AI Customer Service? A Complete Guide to Software, Platforms & Solutions](articles/guide-100229.md)
