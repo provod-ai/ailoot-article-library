@@ -7,6 +7,270 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>OpenAI API Developer Guide</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100238.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100238.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/api-guide/</dc:source>
+      <pubDate>Tue, 24 Nov 2026 06:03:04 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;OpenAI API Developer Guide&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A practical guide to OpenAI API architecture, authentication, streaming, tool use, rate limits, and production operations.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;Overview&lt;/h2&gt;
+&lt;p&gt;A working curl is only the start. Production needs key isolation, observability, rate-limit handling, retries, and a migration plan for &lt;strong&gt;Responses API&lt;/strong&gt; / &lt;strong&gt;Chat Completions&lt;/strong&gt; coexisting—&lt;strong&gt;Assistants API&lt;/strong&gt; may be legacy. This guide targets backend and full-stack engineers who’ve read API Quickstart. &lt;strong&gt;Fields and endpoints follow &lt;a href="https://platform.openai.com/docs/"&gt;API Reference&lt;/a&gt;.&lt;/strong&gt;&lt;/p&gt;
+&lt;h2&gt;Recommended architecture: BFF / gateway&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;[Web / App] ──→ [Your BFF / Gateway] ──→ api.openai.com
+                      │
+            tenant auth, QPS limits,
+            prompt templates, RAG injection,
+            logging and token metering
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Layer&lt;/th&gt;
+&lt;th&gt;Should do&lt;/th&gt;
+&lt;th&gt;Must not&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Client&lt;/td&gt;
+&lt;td&gt;UI, session id&lt;/td&gt;
+&lt;td&gt;Hold OpenAI key&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;BFF&lt;/td&gt;
+&lt;td&gt;Assemble messages, merge retrieval&lt;/td&gt;
+&lt;td&gt;Send key to browser&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Worker&lt;/td&gt;
+&lt;td&gt;Async batch, long jobs&lt;/td&gt;
+&lt;td&gt;Raw HTTP without timeout&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;OpenAI&lt;/td&gt;
+&lt;td&gt;Inference&lt;/td&gt;
+&lt;td&gt;Business RBAC&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2&gt;Auth and key lifecycle&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;Authorization: Bearer sk-...
+Content-Type: application/json
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Read keys from env vars or Vault; validate presence at startup.&lt;/li&gt;
+&lt;li&gt;Multi-tenant SaaS: &lt;strong&gt;don’t give tenants extractable keys&lt;/strong&gt;—proxy from backend.&lt;/li&gt;
+&lt;li&gt;Rotation: new key live → dual-write verify → switch traffic → revoke old key.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Platform details: Platform Overview.&lt;/p&gt;
+&lt;h2&gt;Choosing an API shape&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Shape&lt;/th&gt;
+&lt;th&gt;Endpoint (example)&lt;/th&gt;
+&lt;th&gt;Best for&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Responses API&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/v1/responses&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Quickstart default; tool use&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Chat Completions&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/v1/chat/completions&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Legacy, many third-party examples&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Assistants API&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/v1/assistants&lt;/code&gt;, etc.&lt;/td&gt;
+&lt;td&gt;Stateful Thread; &lt;strong&gt;check legacy status&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Embeddings&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/v1/embeddings&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Vectors—see embeddings guide&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;&lt;strong&gt;New projects:&lt;/strong&gt; follow Quickstart.&lt;strong&gt;Legacy:&lt;/strong&gt; set migration milestones; avoid indefinite dual-stack. Assistants migration: Assistants guide.&lt;/p&gt;
+&lt;h2&gt;Request design: messages and roles&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;model&amp;quot;: &amp;quot;gpt-4o-mini&amp;quot;,
+  &amp;quot;messages&amp;quot;: [
+    {&amp;quot;role&amp;quot;: &amp;quot;system&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;You are order support. Answer shipping and returns only; escalate other topics.&amp;quot;},
+    {&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Where is order 12345?&amp;quot;}
+  ],
+  &amp;quot;temperature&amp;quot;: 0.2,
+  &amp;quot;max_tokens&amp;quot;: 512
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;gpt-4o-mini&lt;/code&gt; is an example model ID—replace with current docs. For the flagship shift, see GPT-6 Astra (&lt;code&gt;gpt-6-astra&lt;/code&gt;): keep a rollback to a stable production id and log the verification date.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Role&lt;/th&gt;
+&lt;th&gt;Purpose&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;system&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Rules, tool docs, output format&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;user&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;End user or upstream system&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;assistant&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Prior replies for multi-turn context&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;code&gt;tool&lt;/code&gt; / &lt;code&gt;function&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Tool return (varies by API version)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Multi-turn: &lt;strong&gt;your service&lt;/strong&gt; maintains &lt;code&gt;messages&lt;/code&gt;; summarize old turns near context limits. Parameter tuning: Text Generation.&lt;/p&gt;
+&lt;h2&gt;Tool use (Tools / Functions)&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;model&amp;quot;: &amp;quot;gpt-4o-mini&amp;quot;,
+  &amp;quot;messages&amp;quot;: [{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;What&amp;#x27;s the weather in Shanghai today?&amp;quot;}],
+  &amp;quot;tools&amp;quot;: [{
+    &amp;quot;type&amp;quot;: &amp;quot;function&amp;quot;,
+    &amp;quot;function&amp;quot;: {
+      &amp;quot;name&amp;quot;: &amp;quot;get_weather&amp;quot;,
+      &amp;quot;description&amp;quot;: &amp;quot;Call when user asks for current weather in a city&amp;quot;,
+      &amp;quot;parameters&amp;quot;: {
+        &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,
+        &amp;quot;properties&amp;quot;: {&amp;quot;city&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;}},
+        &amp;quot;required&amp;quot;: [&amp;quot;city&amp;quot;]
+      }
+    }
+  }]
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Practice&lt;/th&gt;
+&lt;th&gt;Why&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Stable schema&lt;/td&gt;
+&lt;td&gt;Easier prompt regression&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Server-side param validation&lt;/td&gt;
+&lt;td&gt;Never execute model-generated SQL/URLs blindly&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Timeout and idempotency&lt;/td&gt;
+&lt;td&gt;Graceful fallback when external APIs fail&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Complex orchestration: Agents SDK, Responses API.&lt;/p&gt;
+&lt;h2&gt;Error handling and retries&lt;/h2&gt;
+&lt;pre&gt;&lt;code&gt;import time
+from openai import OpenAI, RateLimitError, APIStatusError
+
+client = OpenAI()
+RETRY = {429, 500, 502, 503, 504}
+
+def chat_with_backoff(**kwargs):
+    for i in range(5):
+        try:
+            return client.chat.completions.create(**kwargs)
+        except RateLimitError:
+            time.sleep(2 ** i)
+        except APIStatusError as e:
+            if e.status_code not in RETRY:
+                raise
+            time.sleep(2 ** i)
+    raise RuntimeError(&amp;quot;max retries&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;401 / 400&lt;/strong&gt;: config or body errors—don’t blind retry.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;429&lt;/strong&gt;: respect &lt;code&gt;Retry-After&lt;/code&gt; when present.&lt;/li&gt;
+&lt;li&gt;Log &lt;code&gt;x-request-id&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Rate limits, cost, and caching&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Gateway &lt;strong&gt;per-tenant QPS&lt;/strong&gt; so one customer doesn’t exhaust org RPM.&lt;/li&gt;
+&lt;li&gt;Rate-limit long contexts separately; input tokens often dominate cost.&lt;/li&gt;
+&lt;li&gt;Short TTL cache for identical FAQ + system (mind privacy and staleness).&lt;/li&gt;
+&lt;li&gt;Aggregate tokens and error rates by model, route, tenant.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Structured output&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Declare JSON schema in system with “JSON only.”&lt;/li&gt;
+&lt;li&gt;Use official &lt;strong&gt;Structured Outputs / JSON mode&lt;/strong&gt; when the model supports it.&lt;/li&gt;
+&lt;li&gt;Validate with JSON Schema server-side; retry or degrade on failure.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Prompt templates: Prompt Engineering.&lt;/p&gt;
+&lt;h2&gt;Production launch checklist&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Security&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Keys not in frontend or mobile&lt;/li&gt;
+&lt;li&gt;Redacted input/output logs&lt;/li&gt;
+&lt;li&gt;Human review for high-risk scenarios&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Reliability&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Timeouts (connect + read)&lt;/li&gt;
+&lt;li&gt;429/5xx backoff&lt;/li&gt;
+&lt;li&gt;Circuit breaker on sustained failures&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Quality&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Golden prompts before release&lt;/li&gt;
+&lt;li&gt;Versioned system prompts (Git / CMS)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Compliance&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;User consent and data retention policy&lt;/li&gt;
+&lt;li&gt;Content safety filters per business rules&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Relationship to Assistants API&lt;/h2&gt;
+&lt;p&gt;Assistants offers Assistant / Thread / Run with File Search built in. Official guidance may steer toward &lt;strong&gt;Responses API&lt;/strong&gt; or &lt;strong&gt;Agents SDK&lt;/strong&gt;. &lt;strong&gt;Before new features&lt;/strong&gt;, read migration notes in Assistants guide—don’t assume Assistants is the long-term default.&lt;/p&gt;
+&lt;h2&gt;Frequently asked questions&lt;/h2&gt;
+&lt;h3&gt;Can multiple microservices share one key?&lt;/h3&gt;
+&lt;p&gt;Possible but not ideal; at minimum separate by environment, ideally by service for leak isolation and quota analysis.&lt;/p&gt;
+&lt;h3&gt;How do I implement multi-turn “memory”?&lt;/h3&gt;
+&lt;p&gt;Self-manage &lt;code&gt;messages&lt;/code&gt; or session summaries; or use stateful APIs (Assistants, etc.) and weigh vendor lock-in and cost.&lt;/p&gt;
+&lt;h3&gt;Is stream vs non-stream quality different?&lt;/h3&gt;
+&lt;p&gt;Same model and parameters yield the same distribution; difference is UX and implementation, not quality.&lt;/p&gt;
+&lt;h3&gt;BYOK (bring your own key)?&lt;/h3&gt;
+&lt;p&gt;Feasible with strict isolation and audit; most products proxy from backend.&lt;/p&gt;
+&lt;h3&gt;How do I compare OpenAI vs Claude cost?&lt;/h3&gt;
+&lt;p&gt;Run the same eval set; log tokens and latency; check &lt;a href="https://openai.com/api/pricing/"&gt;OpenAI pricing&lt;/a&gt; and current official provider pricing.&lt;/p&gt;
+&lt;h2&gt;Official resources&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://platform.openai.com/docs/"&gt;API Reference&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://platform.openai.com/"&gt;OpenAI Platform&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://openai.com/api/pricing/"&gt;API pricing&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/api-guide/"&gt;OpenAI API Developer Guide&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Explore &lt;a href="https://ailoot.ai/"&gt;OpenAI API pricing on Ailoot&lt;/a&gt; for your next project. Developers can use one Ailoot-issued key for 1,284 models and variants across 15 categories, putting Ailoot among the world’s largest AI routers by model count. Choose Claude or Qwen for code, FLUX for images, Kling for video, Scribe for transcription, Lyria for music and Tripo3D for 3D assets. BGE embeddings support semantic search.&lt;/p&gt;
+&lt;p&gt;Bring your “&lt;a href="https://ailoot.ai/"&gt;openai api pricing&lt;/a&gt;” project to Ailoot. Build text, reasoning and coding features with GPT-6.2 Astra on Ailoot. Bring Claude and Gemini into the same project when the work calls for another model.&lt;/p&gt;
+&lt;p&gt;Bring your “open ai api pricing” and “openaiapi pricing” projects to Ailoot alongside your other model workflows. Ailoot pricing gives you base access at official provider rates with no markup. Monitor requests, usage and costs in your account, and ask about additional discounts for large volumes.&lt;/p&gt;
+&lt;p&gt;Ailoot adds new flagship models at launch, and one subscription covers the full catalogue. Find a promo code in your account at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>AI agent examples: 12 real ones running in businesses</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100235.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100235.md</guid>
