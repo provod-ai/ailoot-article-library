@@ -7,6 +7,55 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>The Complete Guide to LLM Routing</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100239.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100239.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/complete-guide-llm-routing/</dc:source>
+      <pubDate>Tue, 24 Nov 2026 08:20:21 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;The Complete Guide to LLM Routing&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A guide to the purpose of model routing, the operational risks of hardcoding one model, when routing is useful, and how routers differ from gateways.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;What is LLM routing?&lt;/h2&gt;
+&lt;p&gt;A system that sits behind one API endpoint and picks a suitable model for each request at runtime, instead of your code calling one hardcoded model name. That&amp;#x27;s it. That&amp;#x27;s the whole definition.&lt;/p&gt;
+&lt;p&gt;Stop hardcoding one model name into your app and calling it done. Send every request to a single endpoint instead, and a router picks a model suited to that specific job at runtime, normalises the API across providers, records what it did, and fails over when an upstream breaks. You&amp;#x27;re still in control, a tier alias or a hard pin, but the default behaviour is: right model, this request, now.&lt;/p&gt;
+&lt;p&gt;Here&amp;#x27;s the thing nobody puts on a landing page. The model is an input. It is not your product. Inputs decay. They get deprecated, they get repriced, a better one ships next month and makes the one you picked look slow and expensive by comparison. If you wire your app to one static model name, that decay becomes your problem, on your schedule, whenever the provider feels like changing it. Routing is the decision to stop babysitting that.&lt;/p&gt;
+&lt;p&gt;Underneath the marketing, a router does four jobs, and they&amp;#x27;re worth naming plainly before anything else in this guide makes sense. It normalises the API so you write to one shape across many providers. It chooses a model for each request. It attributes cost per request so you know what each call actually cost, not a blended average. And it observes and fails over, telling you which model served the call and substituting when an upstream goes down. Everything below is one of those four jobs, examined properly.&lt;/p&gt;
+&lt;p&gt;What routing is not: it is not a model. It is not a fine-tune. It does not guarantee a better answer on every single call, because sometimes the router and you would have picked the same thing anyway. What it guarantees is that model choice stops being a hardcoded constant and starts being a decision made per request, with a record of what was decided.&lt;/p&gt;
+&lt;h2&gt;Why a single hardcoded model can be a single point of failure&lt;/h2&gt;
+&lt;p&gt;Two separate problems, and most teams only notice the first one until the second one takes their app down at 2am.&lt;/p&gt;
+&lt;p&gt;The first is churn. Models get deprecated, repriced, and dethroned on a cadence measured in months, not years. The model you picked as &amp;quot;the best one&amp;quot; in January is not the best one by summer, and the provider isn&amp;#x27;t obligated to warn you before the number on the invoice changes or the endpoint gets sunset. &amp;quot;Best model&amp;quot; isn&amp;#x27;t a fact you get to bank. It&amp;#x27;s a moving target, and if your code has that target&amp;#x27;s name burned into it, you inherit the churn as your own maintenance chore.&lt;/p&gt;
+&lt;p&gt;The second is availability, and it&amp;#x27;s the one that actually pages you. A single provider having a bad hour takes your entire product down with it if that provider is your only path to an answer. Your reliability is capped at your narrowest single point, full stop. Doesn&amp;#x27;t matter how good your code is elsewhere. If the one model you call goes dark, so does everything downstream of it.&lt;/p&gt;
+&lt;p&gt;Neither of these is a hypothetical. Both are just what happens when you treat an input like a fixed dependency. The fix isn&amp;#x27;t &amp;quot;pick a better model.&amp;quot; There isn&amp;#x27;t a permanently better model. The fix is to stop needing there to be one.&lt;/p&gt;
+&lt;h2&gt;When you should not use a router&lt;/h2&gt;
+&lt;p&gt;Every vendor page skips this section, which is exactly why it&amp;#x27;s the most useful one in this guide.&lt;/p&gt;
+&lt;p&gt;Routing adds a hop and a per-request choice to your call path. That&amp;#x27;s a fair trade in most production systems, but not all of them. If you have exactly one model and one provider and you&amp;#x27;re genuinely happy, no complaints about cost, no complaints about uptime, a router adds a layer of indirection for a problem you don&amp;#x27;t have. Don&amp;#x27;t add it.&lt;/p&gt;
+&lt;p&gt;If you&amp;#x27;re running against a hard real-time latency budget where a single extra network hop is the difference between meeting an SLA and missing it, that&amp;#x27;s a real cost, and it&amp;#x27;s worth measuring before you route.&lt;/p&gt;
+&lt;p&gt;If you&amp;#x27;re in a strict reproducibility or compliance environment where you want exactly one model and no per-request choice involved, ever, the honest answer is to pin, or in some cases skip the router entirely and go direct to the provider. Pinning gets you most of the normalisation and observability benefits without the per-request choice, which is often the right compromise. Going fully direct is the right call less often than people assume, but it does exist as an option, and I&amp;#x27;d rather tell you that than pretend routing is universally correct.&lt;/p&gt;
+&lt;p&gt;One more honest caution, and it applies even when routing is the right call: automatic systems can regress silently if nobody&amp;#x27;s reading the receipts. A router that&amp;#x27;s quietly making worse picks looks exactly like a router that&amp;#x27;s working fine, unless you&amp;#x27;re actually watching the headers on your calls. If you route, route with the receipts on. That&amp;#x27;s not a slogan, it&amp;#x27;s the only way you&amp;#x27;d ever catch a regression before a customer does.&lt;/p&gt;
+&lt;h2&gt;LLM router vs. AI gateway: what is the difference?&lt;/h2&gt;
+&lt;p&gt;This is the confusion that trips up almost every team evaluating this space, and almost nobody writes about it cleanly, so here&amp;#x27;s the one-line test.&lt;/p&gt;
+&lt;p&gt;Are you asking which model answers a request, or are you asking about the key, the spend limits, and the logging that wraps around all your model traffic? The first question is a router question. The second is a gateway question.&lt;/p&gt;
+&lt;p&gt;A router is specifically about model selection: which one answers this particular call. An AI gateway is the broader control plane around that: one key, authentication, spend limits, logging, policy, all the traffic-management stuff that has nothing to do with which model gets picked. In practice, most products that call themselves a router also do gateway things, one key and normalised auth being the obvious overlap, and most products that call themselves a gateway also do some form of model selection. The terms blur on purpose because the products blur on purpose.&lt;/p&gt;
+&lt;h2&gt;FAQ&lt;/h2&gt;
+&lt;h3&gt;What is an LLM router?#&lt;/h3&gt;
+&lt;p&gt;A system that sits behind one API endpoint and picks a suitable model for each request at runtime, instead of your code calling one hardcoded model name. It normalises the API across providers, attributes cost per call, and can fail over if an upstream breaks.&lt;/p&gt;
+&lt;h3&gt;What is the difference between an LLM router and an AI gateway?#&lt;/h3&gt;
+&lt;p&gt;A router answers &amp;quot;which model serves this request.&amp;quot; A gateway is the broader control plane around all your model traffic, the key, auth, spend limits, and logging. Most real products do some of both.&lt;/p&gt;
+&lt;h3&gt;When should I NOT use a router?#&lt;/h3&gt;
+&lt;p&gt;When you have one model and one provider and are genuinely happy with it, when a hard real-time latency budget makes the extra hop too costly, or when strict reproducibility or compliance needs mean you want exactly one model and no per-request choice. Pin, or in some cases go direct.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/complete-guide-llm-routing/"&gt;The Complete Guide to LLM Routing&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Explore &lt;a href="https://ailoot.ai/"&gt;Ailoot’s unified AI API&lt;/a&gt; for your next project. Developers can use one Ailoot-issued key for 1,284 models and variants across 15 categories, putting Ailoot among the world’s largest AI routers by model count. Use Claude for code, Gemini for document analysis, Nano Banana for photo editing, Veo for video, Eleven v4 for voiceovers, Suno for music and Tripo3D for 3D objects.&lt;/p&gt;
+&lt;p&gt;“&lt;a href="https://ailoot.ai/"&gt;unified ai api&lt;/a&gt;” — Give your platform one Ailoot API for text, code, images, video, audio and 3D. Shared billing keeps model spend together as your app adds capabilities.&lt;/p&gt;
+&lt;p&gt;Use an Ailoot account for project keys and spend controls. Pair the API with Ailoot CLI, Ailoot Code or a supported SDK such as LiteLLM.&lt;/p&gt;
+&lt;p&gt;Ailoot adds new flagship models at launch, and one subscription covers the full catalogue. Find a promo code in your account at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>OpenAI API Developer Guide</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100238.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100238.md</guid>
