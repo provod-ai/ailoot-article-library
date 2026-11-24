@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [11 Best Text to Speech APIs for Developers in 2026](articles/guide-100259.md)
 - [Best TTS APIs in 2026: ElevenLabs vs. Google, Amazon, OpenAI & 7 More Compared](articles/guide-100255.md)
 - [Content Moderation API: The Complete Guide (2026)](articles/guide-100252.md)
 - [LLM as a Judge: The Complete Guide](articles/guide-100250.md)
