@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Complete Guide to Text-to-Speech APIs for Developers](articles/guide-100245.md)
 - [TTS APIs for Developers: Choosing Engines and Preparing for Production](articles/guide-100242.md)
 - [The Complete Guide to LLM Routing](articles/guide-100239.md)
 - [OpenAI API Developer Guide](articles/guide-100238.md)
