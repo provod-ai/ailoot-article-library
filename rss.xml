@@ -530,19 +530,89 @@ print(summary[&amp;quot;violations&amp;quot;])
 &lt;/ul&gt;
 &lt;p&gt;Example:&lt;/p&gt;
 &lt;p&gt;prompt.py&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;1# Bad prompt2response = client.chat.completions.create(3    model=&amp;quot;gpt-4.1&amp;quot;, messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Write about marketing&amp;quot;}]4)5
-6# Good prompt7response = client.chat.completions.create(8    model=&amp;quot;gpt-4.1&amp;quot;,9    messages=[10        {11            &amp;quot;role&amp;quot;: &amp;quot;system&amp;quot;,12            &amp;quot;content&amp;quot;: &amp;quot;You are a digital marketing expert who writes concise, actionable advice.&amp;quot;,13        },14        {15            &amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;,16            &amp;quot;content&amp;quot;: &amp;quot;Write a 3-paragraph email marketing strategy for a SaaS startup targeting small businesses. Focus on deliverability, segmentation, and automation.&amp;quot;,17        },18    ],19)
+&lt;pre&gt;&lt;code&gt;from openai import OpenAI
+
+client = OpenAI()  # Reads OPENAI_API_KEY from the environment.
+
+# Vague instructions leave the topic and format open.
+vague = client.chat.completions.create(
+    model=&amp;quot;gpt-4.1&amp;quot;,
+    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Write about marketing.&amp;quot;}],
+)
+print(vague.choices[0].message.content)
+
+# Specify the audience, deliverable, and focus.
+specific = client.chat.completions.create(
+    model=&amp;quot;gpt-4.1&amp;quot;,
+    messages=[
+        {&amp;quot;role&amp;quot;: &amp;quot;developer&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Write concise advice for SaaS teams.&amp;quot;},
+        {&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: (
+            &amp;quot;Write three paragraphs on email marketing for a SaaS startup &amp;quot;
+            &amp;quot;selling to small businesses. Cover deliverability, segmentation, &amp;quot;
+            &amp;quot;and automation.&amp;quot;
+        )},
+    ],
+)
+print(specific.choices[0].message.content)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;2. Use Structured Outputs for Reliable Data&lt;/h3&gt;
 &lt;p&gt;For JSON or other structured data, use the API’s structured output features instead of parsing free-form text. Check the documentation for the supported format and constraints.&lt;/p&gt;
 &lt;p&gt;prompt.py&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;1response = client.chat.completions.create(2    model=&amp;quot;gpt-4.1&amp;quot;,3    messages=[4        {5            &amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;,6            &amp;quot;content&amp;quot;: &amp;quot;Extract the product name, price, and category from: &amp;#x27;The new iPhone 15 Pro costs $999 and is in the smartphones category&amp;#x27;&amp;quot;,7        }8    ],9    response_format={10        &amp;quot;type&amp;quot;: &amp;quot;json_schema&amp;quot;,11        &amp;quot;json_schema&amp;quot;: {12            &amp;quot;name&amp;quot;: &amp;quot;product_extraction&amp;quot;,13            &amp;quot;schema&amp;quot;: {14                &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,15                &amp;quot;properties&amp;quot;: {16                    &amp;quot;product_name&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;},17                    &amp;quot;price&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;number&amp;quot;},18                    &amp;quot;category&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;},19                },20                &amp;quot;required&amp;quot;: [&amp;quot;product_name&amp;quot;, &amp;quot;price&amp;quot;, &amp;quot;category&amp;quot;],21            },22        },23    },24)25
+&lt;pre&gt;&lt;code&gt;import json
+
+from openai import OpenAI
+
+client = OpenAI()
+response = client.chat.completions.create(
+    model=&amp;quot;gpt-4.1&amp;quot;,
+    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: (
+        &amp;quot;Extract the product name, price in US dollars, and category: &amp;quot;
+        &amp;quot;The iPhone 15 Pro costs $999 and is a smartphone.&amp;quot;
+    )}],
+    response_format={
+        &amp;quot;type&amp;quot;: &amp;quot;json_schema&amp;quot;,
+        &amp;quot;json_schema&amp;quot;: {
+            &amp;quot;name&amp;quot;: &amp;quot;product_extraction&amp;quot;,
+            &amp;quot;strict&amp;quot;: True,
+            &amp;quot;schema&amp;quot;: {
+                &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,
+                &amp;quot;properties&amp;quot;: {
+                    &amp;quot;product_name&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;},
+                    &amp;quot;price&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;number&amp;quot;},
+                    &amp;quot;category&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;},
+                },
+                &amp;quot;required&amp;quot;: [&amp;quot;product_name&amp;quot;, &amp;quot;price&amp;quot;, &amp;quot;category&amp;quot;],
+                &amp;quot;additionalProperties&amp;quot;: False,
+            },
+        },
+    },
+)
+choice = response.choices[0]
+message = choice.message
+if message.refusal:
+    raise RuntimeError(message.refusal)
+if choice.finish_reason != &amp;quot;stop&amp;quot; or not message.content:
+    raise RuntimeError(f&amp;quot;No complete JSON response ({choice.finish_reason}).&amp;quot;)
+product = json.loads(message.content)
+print(product)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;3. Implement Streaming for Better User Experience&lt;/h3&gt;
 &lt;p&gt;Streaming can show response content as it arrives rather than waiting for the complete response.&lt;/p&gt;
 &lt;p&gt;prompt.py&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;1stream = client.chat.completions.create(2    model=&amp;quot;gpt-4.1-mini&amp;quot;,3    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Explain quantum computing in simple terms&amp;quot;}],4    stream=True,5)6
-7for chunk in stream:8    if chunk.choices[0].delta.content:9        print(chunk.choices[0].delta.content, end=&amp;quot;&amp;quot;)
+&lt;pre&gt;&lt;code&gt;from openai import OpenAI
+
+client = OpenAI()
+with client.chat.completions.create(
+    model=&amp;quot;gpt-4.1-mini&amp;quot;,
+    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Explain quantum computing simply.&amp;quot;}],
+    stream=True,
+) as stream:
+    for chunk in stream:
+        if chunk.choices:
+            text = chunk.choices[0].delta.content
+            if text:
+                print(text, end=&amp;quot;&amp;quot;, flush=True)
+print()
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;4. Manage Context and Token Limits&lt;/h3&gt;
 &lt;p&gt;A model’s context window limits the tokens available for input and output. Monitor usage to avoid truncation and unexpected costs.&lt;/p&gt;
@@ -553,19 +623,66 @@ print(summary[&amp;quot;violations&amp;quot;])
 &lt;li&gt;Consider chunking or summarizing long documents.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;prompt.py&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;1response = client.chat.completions.create( model=&amp;quot;gpt-4.1-mini&amp;quot;, messages=messages, max_tokens=500 # Limit response length )2
-3# Track usage print(f&amp;quot;Tokens used: {response.usage.total_tokens}&amp;quot;)
+&lt;pre&gt;&lt;code&gt;from openai import OpenAI
+
+client = OpenAI()
+response = client.chat.completions.create(
+    model=&amp;quot;gpt-4.1-mini&amp;quot;,
+    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Explain an API in two sentences.&amp;quot;}],
+    max_completion_tokens=500,
+)
+print(response.choices[0].message.content)
+if response.usage is not None:
+    print(f&amp;quot;Tokens used: {response.usage.total_tokens}&amp;quot;)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;5. Handle Errors Gracefully&lt;/h3&gt;
 &lt;p&gt;Requests may fail because of network issues, rate limits, invalid input, or service outages. Handle errors according to the SDK and API documentation.&lt;/p&gt;
 &lt;p&gt;prompt.py&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;1from openai import OpenAI, APIError, RateLimitError, APIConnectionError2import time3
-4
-5def make_api_call_with_retry(client, messages, max_retries=3):6    for attempt in range(max_retries):7        try:8            response = client.chat.completions.create(9                model=&amp;quot;gpt-4.1-mini&amp;quot;, messages=messages10            )11            return response12
-13        except RateLimitError:14            # Exponential backoff15            wait_time = (2**attempt) + 116            print(f&amp;quot;Rate limit hit. Retrying in {wait_time} seconds...&amp;quot;)17            time.sleep(wait_time)18
-19        except APIConnectionError:20            print(f&amp;quot;Connection error. Retrying... (Attempt {attempt + 1})&amp;quot;)21            time.sleep(2)22
-23        except APIError as e:24            print(f&amp;quot;API error: {e}&amp;quot;)25            return None26
-27    print(&amp;quot;Max retries exceeded&amp;quot;)28    return None
+&lt;pre&gt;&lt;code&gt;from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
+import math
+import random
+import time
+
+from openai import APIConnectionError, APIStatusError, OpenAI, RateLimitError
+
+
+def retry_delay(error, attempt):
+    hint = error.response.headers.get(&amp;quot;Retry-After&amp;quot;)
+    if hint:
+        try:
+            seconds = float(hint)
+        except ValueError:
+            try:
+                date = parsedate_to_datetime(hint)
+                seconds = max(0.0, (date - datetime.now(timezone.utc)).total_seconds())
+            except (ValueError, TypeError, OverflowError):
+                seconds = -1
+        if math.isfinite(seconds) and seconds &amp;gt;= 0:
+            return seconds
+    return 2**attempt + random.uniform(0, 0.25)
+
+
+client = OpenAI(max_retries=0, timeout=10.0)
+messages = [{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Suggest one way to improve API reliability.&amp;quot;}]
+max_attempts = 3
+for attempt in range(max_attempts):
+    try:
+        response = client.chat.completions.create(model=&amp;quot;gpt-4.1-mini&amp;quot;, messages=messages)
+        print(response.choices[0].message.content)
+        break
+    except RateLimitError as error:
+        # Retry transient rate limits. Quota and billing errors need action.
+        if error.code != &amp;quot;rate_limit_exceeded&amp;quot; or attempt == max_attempts - 1:
+            raise
+        delay = retry_delay(error, attempt)
+        if delay &amp;gt; 5:
+            raise
+        time.sleep(delay)
+    except APIConnectionError as error:
+        raise SystemExit(&amp;quot;Connection failed. Check connectivity before resending.&amp;quot;) from error
+    except APIStatusError as error:
+        raise SystemExit(f&amp;quot;API returned HTTP {error.status_code}.&amp;quot;) from error
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;6. Optimize Costs&lt;/h3&gt;
 &lt;ul&gt;
@@ -576,7 +693,17 @@ print(summary[&amp;quot;violations&amp;quot;])
 &lt;li&gt;Monitor spending in the &lt;a href="https://platform.openai.com/usage"&gt;OpenAI usage dashboard&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;prompt.py&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;1# Cost-effective approach2response = client.chat.completions.create(3    model=&amp;quot;gpt-4.1-mini&amp;quot;,  # Cheaper model for simple tasks4    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: prompt}],5    max_tokens=150,  # Limit response length6    temperature=0.3,  # Lower temperature for more deterministic, cheaper outputs7)8
+&lt;pre&gt;&lt;code&gt;from openai import OpenAI
+
+client = OpenAI()
+prompt = &amp;quot;Summarize in one sentence: The meeting moved from Monday to Tuesday.&amp;quot;
+response = client.chat.completions.create(
+    model=&amp;quot;gpt-4.1-mini&amp;quot;,
+    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: prompt}],
+    max_completion_tokens=150,
+    temperature=0.3,
+)
+print(response.choices[0].message.content)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Consult the &lt;a href="https://openai.com/api/pricing/"&gt;OpenAI pricing page&lt;/a&gt; for current model prices.&lt;/p&gt;
 &lt;h3&gt;7. Implement Rate Limiting&lt;/h3&gt;
@@ -590,9 +717,52 @@ print(summary[&amp;quot;violations&amp;quot;])
 &lt;h3&gt;8. Use Function Calling for Tool Integration&lt;/h3&gt;
 &lt;p&gt;Function calling allows a model to request that your application call a function or tool. Your application handles the call and returns results as appropriate.&lt;/p&gt;
 &lt;p&gt;prompt.py&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;1tools = [2    {3        &amp;quot;type&amp;quot;: &amp;quot;function&amp;quot;,4        &amp;quot;function&amp;quot;: {5            &amp;quot;name&amp;quot;: &amp;quot;get_weather&amp;quot;,6            &amp;quot;description&amp;quot;: &amp;quot;Get current weather for a location&amp;quot;,7            &amp;quot;parameters&amp;quot;: {8                &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,9                &amp;quot;properties&amp;quot;: {10                    &amp;quot;location&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;City name&amp;quot;}11                },12                &amp;quot;required&amp;quot;: [&amp;quot;location&amp;quot;],13            },14        },15    }16]17
-18response = client.chat.completions.create(19    model=&amp;quot;gpt-4.1&amp;quot;,20    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;What&amp;#x27;s the weather in San Francisco?&amp;quot;}],21    tools=tools,22)23
-24# Check if model wants to call a function25if response.choices[0].message.tool_calls:26    # Execute your function and return results to the model27    pass
+&lt;pre&gt;&lt;code&gt;import json
+
+from openai import OpenAI
+
+
+def celsius_to_fahrenheit(celsius):
+    return celsius * 9 / 5 + 32
+
+
+client = OpenAI()
+tools = [{
+    &amp;quot;type&amp;quot;: &amp;quot;function&amp;quot;,
+    &amp;quot;function&amp;quot;: {
+        &amp;quot;name&amp;quot;: &amp;quot;celsius_to_fahrenheit&amp;quot;,
+        &amp;quot;description&amp;quot;: &amp;quot;Convert a temperature from Celsius to Fahrenheit.&amp;quot;,
+        &amp;quot;strict&amp;quot;: True,
+        &amp;quot;parameters&amp;quot;: {
+            &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,
+            &amp;quot;properties&amp;quot;: {&amp;quot;celsius&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;number&amp;quot;}},
+            &amp;quot;required&amp;quot;: [&amp;quot;celsius&amp;quot;],
+            &amp;quot;additionalProperties&amp;quot;: False,
+        },
+    },
+}]
+messages = [{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Convert 20 degrees Celsius to Fahrenheit.&amp;quot;}]
+response = client.chat.completions.create(
+    model=&amp;quot;gpt-4.1&amp;quot;, messages=messages, tools=tools,
+    tool_choice=&amp;quot;required&amp;quot;, parallel_tool_calls=False,
+)
+assistant = response.choices[0].message
+if not assistant.tool_calls:
+    raise RuntimeError(assistant.refusal or &amp;quot;The model did not request the tool.&amp;quot;)
+messages.append(assistant)
+for call in assistant.tool_calls:
+    if call.function.name != &amp;quot;celsius_to_fahrenheit&amp;quot;:
+        raise ValueError(f&amp;quot;Unexpected tool: {call.function.name}&amp;quot;)
+    arguments = json.loads(call.function.arguments)
+    fahrenheit = celsius_to_fahrenheit(**arguments)
+    messages.append({
+        &amp;quot;role&amp;quot;: &amp;quot;tool&amp;quot;,
+        &amp;quot;tool_call_id&amp;quot;: call.id,
+        &amp;quot;content&amp;quot;: json.dumps({&amp;quot;fahrenheit&amp;quot;: fahrenheit}),
+    })
+
+final = client.chat.completions.create(model=&amp;quot;gpt-4.1&amp;quot;, messages=messages)
+print(final.choices[0].message.content)
 &lt;/code&gt;&lt;/pre&gt;
 &lt;h3&gt;9. Secure Your API Key&lt;/h3&gt;
 &lt;ul&gt;
