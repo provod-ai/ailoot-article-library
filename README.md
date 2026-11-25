@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [7 Criteria for Choosing an LLM Routing Tool](articles/guide-100282.md)
 - [OpenAI Moderation API Pricing: Free, Rate Limits, and Alternatives](articles/guide-100281.md)
 - [The real cost of LLM inference is the GPU you are not using](articles/guide-100279.md)
 - [Free and low-cost LLMs for coding and writing in mid-2026](articles/guide-100298.md)
