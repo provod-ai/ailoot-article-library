@@ -7,6 +7,181 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>OpenAI Moderation API Pricing: Free, Rate Limits, and Alternatives</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100281.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100281.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/openai-moderation-api-pricing-free-rate-limits-and-alternatives/</dc:source>
+      <pubDate>Wed, 25 Nov 2026 16:23:19 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;OpenAI Moderation API Pricing: Free, Rate Limits, and Alternatives&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;OpenAI moderation models are free. See pricing, rate limits by usage tier, Python examples, and when an OpenAI-compatible alternative fits better.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;OpenAI’s Moderation endpoint is free for OpenAI API users. To choose a production workflow, check the supported inputs and categories, your account’s rate limits, and how the endpoint fits your review process.&lt;/p&gt;
+&lt;p&gt;This guide separates the official pricing answer from the practical engineering decision.&lt;/p&gt;
+&lt;h2&gt;TL;DR&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;OpenAI&amp;#x27;s Moderation endpoint is free for OpenAI API users&lt;/strong&gt;, according to OpenAI&amp;#x27;s Help Center.&lt;/li&gt;
+&lt;li&gt;OpenAI&amp;#x27;s &lt;code&gt;omni-moderation-latest&lt;/code&gt; model is designed to detect harmful content and accepts text and images as input, according to the official OpenAI model page.&lt;/li&gt;
+&lt;li&gt;Free pricing does not remove workflow costs such as logging, review queues, policy mapping, retries, fallback behavior, and application-specific decisions.&lt;/li&gt;
+&lt;li&gt;Choose OpenAI&amp;#x27;s free endpoint if you already use OpenAI directly and your moderation workflow fits its categories and response format.&lt;/li&gt;
+&lt;li&gt;Consider EvoLink Moderation 1.0 if you already use EvoLink and want multimodal checks, a risk summary and per-call billing in the same workflow.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Is the OpenAI Moderation API free?&lt;/h2&gt;
+&lt;p&gt;Yes. OpenAI&amp;#x27;s official Help Center states that the Moderation endpoint is free for OpenAI API users and that usage of the tool does not count toward monthly usage limits.&lt;/p&gt;
+&lt;p&gt;Source: &lt;a href="https://help.openai.com/en/articles/4936833-is-the-moderation-endpoint-free-to-use"&gt;OpenAI Help Center: Is the Moderation endpoint free to use?&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;That is the pricing answer. The next question is operational:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Is a free moderation endpoint enough for your production workflow?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;For prototypes, internal tools, and simple text-first moderation, it may be. For applications that handle user-generated content, image uploads, AI agents, or review queues, the API call is only one part of the system.&lt;/p&gt;
+&lt;h2&gt;What does OpenAI moderation cover?&lt;/h2&gt;
+&lt;p&gt;OpenAI documents &lt;code&gt;omni-moderation-latest&lt;/code&gt; as a moderation model designed to identify potentially harmful content in text and images. The official model page describes it as OpenAI&amp;#x27;s most capable moderation model and lists support for text input/output and image input. Source: &lt;a href="https://platform.openai.com/docs/models/omni-moderation-latest"&gt;OpenAI model page for omni-moderation-latest&lt;/a&gt; OpenAI&amp;#x27;s moderation guide also explains content classification categories and notes that some categories are text-only. If you send only images to &lt;code&gt;omni-moderation-latest&lt;/code&gt;, categories that do not support image inputs return a score of 0. Source: &lt;a href="https://developers.openai.com/api/docs/guides/moderation"&gt;OpenAI Moderation guide&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;That means teams should read the category table carefully before assuming that every text category maps directly to image moderation.&lt;/p&gt;
+&lt;h2&gt;The real cost is workflow, not just API pricing&lt;/h2&gt;
+&lt;p&gt;The Moderation endpoint may be free, but a production moderation system still needs decisions around:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;where to run checks: before model calls, after model responses, or both&lt;/li&gt;
+&lt;li&gt;how to map categories to allow, review, or block decisions&lt;/li&gt;
+&lt;li&gt;how to log moderation outcomes without storing sensitive content unnecessarily&lt;/li&gt;
+&lt;li&gt;how to handle false positives and appeals&lt;/li&gt;
+&lt;li&gt;how to moderate image uploads separately from text input&lt;/li&gt;
+&lt;li&gt;how to monitor latency, errors, and rate limits&lt;/li&gt;
+&lt;li&gt;how to keep policy behavior consistent across product surfaces&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Those are engineering and operations costs. They do not show up on a pricing page, but they decide whether the moderation layer is actually maintainable.&lt;/p&gt;
+&lt;p&gt;In a typical workflow, check prompts before sending them to the model and check outputs before delivery. Send uncertain results to review, keep a minimal record of decisions, and plan for retries and appeals.&lt;/p&gt;
+&lt;h2&gt;When OpenAI&amp;#x27;s free endpoint is a good fit&lt;/h2&gt;
+&lt;p&gt;OpenAI&amp;#x27;s free Moderation endpoint is often a good first choice when:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;you already use OpenAI directly&lt;/li&gt;
+&lt;li&gt;your app is mostly text-first&lt;/li&gt;
+&lt;li&gt;you only need OpenAI&amp;#x27;s documented moderation categories&lt;/li&gt;
+&lt;li&gt;you can build your own review and escalation workflow&lt;/li&gt;
+&lt;li&gt;your team is comfortable owning response parsing, thresholds, and logs&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In that case, the free endpoint is hard to argue against. Start there, test it against your real content, and measure false positives and missed cases before routing production traffic.&lt;/p&gt;
+&lt;h2&gt;When an OpenAI-compatible alternative makes sense&lt;/h2&gt;
+&lt;p&gt;EvoLink Moderation 1.0 is a paid alternative with an OpenAI-compatible &lt;code&gt;/v1/moderations&lt;/code&gt; route. EvoLink accepts at most one image per request.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;text-only, image-only, and text-plus-image checks through one endpoint&lt;/li&gt;
+&lt;li&gt;13 harm categories with per-category scores&lt;/li&gt;
+&lt;li&gt;an &lt;code&gt;evolink_summary&lt;/code&gt; object with &lt;code&gt;risk_level&lt;/code&gt;, &lt;code&gt;flagged&lt;/code&gt;, &lt;code&gt;violations&lt;/code&gt;, &lt;code&gt;max_score&lt;/code&gt; and &lt;code&gt;max_category&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;flat per-call pricing instead of token math&lt;/li&gt;
+&lt;li&gt;a response shape that is easier to map to allow, review, or block logic&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;How to use OpenAI Moderation API in Python&lt;/h2&gt;
+&lt;p&gt;If you are already using the OpenAI SDK, a basic text moderation call looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;from openai import OpenAI
+
+client = OpenAI()
+
+response = client.moderations.create(
+    model=&amp;quot;omni-moderation-latest&amp;quot;,
+    input=&amp;quot;user text here&amp;quot;
+)
+
+print(response.results[0].flagged)
+print(response.results[0].categories)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;For EvoLink, set &lt;code&gt;EVOLINK_API_KEY&lt;/code&gt; to your EvoLink key and &lt;code&gt;EVOLINK_BASE_URL&lt;/code&gt; to the HTTPS API base ending in &lt;code&gt;/v1&lt;/code&gt; from your EvoLink API configuration. The response includes the additional &lt;code&gt;evolink_summary&lt;/code&gt; object.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import os
+
+from openai import OpenAI
+
+# EVOLINK_API_KEY=YOUR_EVOLINK_API_KEY
+client = OpenAI(
+    api_key=os.environ[&amp;quot;EVOLINK_API_KEY&amp;quot;],
+    base_url=os.environ[&amp;quot;EVOLINK_BASE_URL&amp;quot;],
+)
+
+response = client.moderations.create(
+    model=&amp;quot;evolink-moderation-1.0&amp;quot;,
+    input=[{&amp;quot;type&amp;quot;: &amp;quot;text&amp;quot;, &amp;quot;text&amp;quot;: &amp;quot;user text here&amp;quot;}],
+)
+
+summary = response.model_extra[&amp;quot;evolink_summary&amp;quot;]
+print(summary[&amp;quot;risk_level&amp;quot;])
+print(summary[&amp;quot;violations&amp;quot;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;OpenAI vs EvoLink for pricing and workflow&lt;/h2&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Criterion&lt;/th&gt;
+&lt;th&gt;OpenAI Moderation API&lt;/th&gt;
+&lt;th&gt;EvoLink Moderation 1.0&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Billing&lt;/td&gt;
+&lt;td&gt;Free for OpenAI API users&lt;/td&gt;
+&lt;td&gt;Paid at a flat rate per call&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Main endpoint shape&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;/v1/moderations&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;OpenAI-compatible &lt;code&gt;/v1/moderations&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Text moderation&lt;/td&gt;
+&lt;td&gt;Supported&lt;/td&gt;
+&lt;td&gt;Supported&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Image moderation&lt;/td&gt;
+&lt;td&gt;Supported by &lt;code&gt;omni-moderation-latest&lt;/code&gt;, with category-specific input support&lt;/td&gt;
+&lt;td&gt;Supported for image-only and text-plus-image requests&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Fields for policy decisions&lt;/td&gt;
+&lt;td&gt;Interpret &lt;code&gt;flagged&lt;/code&gt;, &lt;code&gt;categories&lt;/code&gt; and &lt;code&gt;category_scores&lt;/code&gt; in &lt;code&gt;results&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Use &lt;code&gt;evolink_summary.risk_level&lt;/code&gt; and &lt;code&gt;violations&lt;/code&gt; alongside category scores&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Best fit&lt;/td&gt;
+&lt;td&gt;Teams already calling OpenAI directly&lt;/td&gt;
+&lt;td&gt;Teams integrating moderation into an existing EvoLink workflow&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h2&gt;Practical recommendation&lt;/h2&gt;
+&lt;p&gt;Use OpenAI&amp;#x27;s free Moderation endpoint if your application is already OpenAI-native and your moderation policy maps cleanly to its documented categories.&lt;/p&gt;
+&lt;p&gt;If your team already uses EvoLink, evaluate its per-call cost and use &lt;code&gt;evolink_summary.risk_level&lt;/code&gt; as one input to your application’s allow, review or block rules.&lt;/p&gt;
+&lt;p&gt;Use a multi-layered moderation system if your application has custom policy requirements that need brand rules, human review, appeals, or compliance workflows beyond any single moderation API.&lt;/p&gt;
+&lt;h2&gt;FAQ&lt;/h2&gt;
+&lt;h3&gt;Is the OpenAI Moderation API free?&lt;/h3&gt;
+&lt;p&gt;Yes. OpenAI&amp;#x27;s Help Center says the Moderation endpoint is free for OpenAI API users and does not count toward monthly usage limits.&lt;/p&gt;
+&lt;h3&gt;Does OpenAI moderation support images?&lt;/h3&gt;
+&lt;p&gt;Yes, &lt;code&gt;omni-moderation-latest&lt;/code&gt; accepts images as input according to OpenAI&amp;#x27;s official model page. However, OpenAI&amp;#x27;s moderation guide notes that some categories are text-only, so teams should review category-level input support before relying on image-only moderation.&lt;/p&gt;
+&lt;h3&gt;Is EvoLink Moderation cheaper than OpenAI Moderation?&lt;/h3&gt;
+&lt;p&gt;OpenAI’s Moderation endpoint is free for OpenAI API users. EvoLink charges a flat rate per call. Compare the cost of the complete workflow, including review and maintenance.&lt;/p&gt;
+&lt;h3&gt;Can I use EvoLink as an OpenAI Moderation API alternative?&lt;/h3&gt;
+&lt;p&gt;Yes. Use your EvoLink API key and the model &lt;code&gt;evolink-moderation-1.0&lt;/code&gt; on EvoLink’s compatible &lt;code&gt;/v1/moderations&lt;/code&gt; route. Update your response handling to account for EvoLink’s separate &lt;code&gt;evolink_summary&lt;/code&gt; object.&lt;/p&gt;
+&lt;h3&gt;Should I moderate prompts, outputs, or both?&lt;/h3&gt;
+&lt;p&gt;For production AI applications, many teams moderate both inputs and outputs. Input moderation can reduce unsafe requests before they reach a model. Output moderation can catch unsafe generated responses before they reach users.&lt;/p&gt;
+&lt;h3&gt;What is omni-moderation-latest?&lt;/h3&gt;
+&lt;p&gt;It is OpenAI’s moderation model for text and images. Read &lt;code&gt;flagged&lt;/code&gt;, &lt;code&gt;categories&lt;/code&gt; and &lt;code&gt;category_scores&lt;/code&gt; in &lt;code&gt;results&lt;/code&gt; and apply your own moderation policy.&lt;/p&gt;
+&lt;h3&gt;What is the OpenAI Moderation API rate limit?&lt;/h3&gt;
+&lt;p&gt;Free access describes billing. Request and token limits still apply. In the &lt;a href="https://developers.openai.com/api/docs/models/omni-moderation-latest"&gt;model reference&lt;/a&gt;, RPM means requests per minute, RPD means requests per day where listed, and TPM means tokens per minute.&lt;/p&gt;
+&lt;p&gt;OpenAI Moderation API rate limits vary by account tier and can change over time. Check the &lt;a href="https://platform.openai.com/docs/guides/rate-limits"&gt;OpenAI rate limits documentation&lt;/a&gt; and your account&amp;#x27;s &lt;a href="https://platform.openai.com/settings/organization/limits"&gt;usage limits page&lt;/a&gt; before planning production throughput.&lt;/p&gt;
+&lt;h3&gt;How do I use the OpenAI Moderation API in Python?&lt;/h3&gt;
+&lt;p&gt;Install the &lt;code&gt;openai&lt;/code&gt; package, set &lt;code&gt;OPENAI_API_KEY&lt;/code&gt;, and call &lt;code&gt;client.moderations.create()&lt;/code&gt; with the model &lt;code&gt;omni-moderation-latest&lt;/code&gt; and your text. For images, pass &lt;code&gt;input&lt;/code&gt; as an array of objects. Each image item has &lt;code&gt;type: &amp;quot;image_url&amp;quot;&lt;/code&gt; and an &lt;code&gt;image_url&lt;/code&gt; object containing &lt;code&gt;url&lt;/code&gt;, as shown in the OpenAI API reference linked below.&lt;/p&gt;
+&lt;h2&gt;Related moderation guides&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://ailoot.ai/blog/en/ai-content-moderation/"&gt;Ailoot’s guide to AI content moderation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://developers.openai.com/api/reference/resources/moderations/methods/create"&gt;OpenAI API reference for creating a moderation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/openai-moderation-api-pricing-free-rate-limits-and-alternatives/"&gt;OpenAI Moderation API Pricing: Free, Rate Limits, and Alternatives&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Explore &lt;a href="https://ailoot.ai/"&gt;OpenAI API pricing on Ailoot&lt;/a&gt; for your next project. Developers can use one Ailoot-issued key for 1,284 models and variants across 15 categories, putting Ailoot among the world’s largest AI routers by model count. The same key covers GPT, Claude, Gemini, Grok, Qwen and DeepSeek, plus Nano Banana for photos, Veo for video, Eleven v4 for speech, Suno for music, Tripo3D for 3D and BGE for search.&lt;/p&gt;
+&lt;p&gt;“openai api pricing moderation official” — Add GPT-6.2 Astra or GPT-6.2 Sol to your app with Ailoot. The API supports OpenAI Chat Completions and Responses and lets your project share a balance with Claude and Gemini.&lt;/p&gt;
+&lt;p&gt;One Ailoot subscription covers the model catalogue. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices, with additional discounts available for volume.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue. With day-one access to new flagship models, you can keep using the same key when a new model arrives. Visit &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; for subscriptions and promo codes offering up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>The real cost of LLM inference is the GPU you are not using</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100279.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100279.md</guid>
