@@ -7,6 +7,212 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>ChatGPT API: How to Set Up, Pricing, and Code Examples (2026)</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100277.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100277.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/chatgpt-api-setup-pricing-code-examples-2026/</dc:source>
+      <pubDate>Wed, 25 Nov 2026 10:36:56 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;ChatGPT API: How to Set Up, Pricing, and Code Examples (2026)&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A practical guide to setting up the ChatGPT API, comparing models and pricing, and building applications with code examples.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The ChatGPT API gives developers programmatic access to OpenAI models. This guide covers API key setup, model selection, pricing, code examples, and practices for building applications and managing costs.&lt;/p&gt;
+&lt;h2&gt;What Is the ChatGPT API?&lt;/h2&gt;
+&lt;p&gt;The ChatGPT API lets developers integrate AI capabilities into applications through HTTP requests. Applications send structured requests to OpenAI and receive JSON responses containing model output.&lt;/p&gt;
+&lt;h3&gt;How the ChatGPT API Works&lt;/h3&gt;
+&lt;p&gt;The process follows four steps:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;You send a request.&lt;/strong&gt; Your application sends a POST request to OpenAI with a JSON payload containing a model name, messages, and parameters such as temperature and token limits.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;OpenAI processes the request.&lt;/strong&gt; The model generates a response and returns it in a JSON object. With streaming enabled, tokens arrive incrementally.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Your application receives the response.&lt;/strong&gt; The response includes generated content, token usage, model information, and a request ID.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Billing occurs.&lt;/strong&gt; Charges depend on processed tokens. Input and output tokens may have different rates.&lt;/p&gt;
+&lt;p&gt;Prompt length, model selection, and caching affect performance and cost.&lt;/p&gt;
+&lt;h2&gt;ChatGPT API Models and Pricing (2026)&lt;/h2&gt;
+&lt;p&gt;Model availability, features, and prices can change. Check OpenAI’s &lt;a href="https://openai.com/api/pricing/"&gt;API pricing&lt;/a&gt; and &lt;a href="https://developers.openai.com/api/docs"&gt;developer documentation&lt;/a&gt; for current details. Pricing is generally based on input and output tokens, which may have different rates.&lt;/p&gt;
+&lt;h3&gt;Models and Capabilities&lt;/h3&gt;
+&lt;p&gt;The source lists GPT-5.4, GPT-5.4 mini, GPT-5.4 nano, GPT-5.4 pro, GPT-5.2, GPT-5 mini, GPT-5 nano, GPT-4.1, GPT-4.1 mini, GPT-4.1 nano, o3, o4-mini, and o3-mini. Its specific claims about launch dates, prices, context windows, model availability, and capabilities are time-sensitive and should be checked against current official documentation before use.&lt;/p&gt;
+&lt;h3&gt;How to Choose a Model&lt;/h3&gt;
+&lt;p&gt;Choose a model based on your task, quality requirements, latency, and budget. Test candidates on representative workloads and compare output quality and cost.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Customer support, Q&amp;amp;A, and content generation: compare models on representative requests.&lt;/li&gt;
+&lt;li&gt;Code generation, analysis, and agent workflows: evaluate quality on your own tasks.&lt;/li&gt;
+&lt;li&gt;Image understanding and multimodal applications: confirm the model’s supported inputs.&lt;/li&gt;
+&lt;li&gt;Math and multi-step reasoning: test reasoning models against your requirements.&lt;/li&gt;
+&lt;li&gt;Classification and extraction: consider throughput and cost alongside accuracy.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;How to Set Up the ChatGPT API&lt;/h2&gt;
+&lt;p&gt;You need an API key to authenticate requests. Treat it as a secret and store it securely.&lt;/p&gt;
+&lt;h3&gt;How to Obtain an OpenAI API Key&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Step 1: Access the OpenAI Platform&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Visit &lt;a href="https://platform.openai.com/api-keys"&gt;platform.openai.com/api-keys&lt;/a&gt; and sign in or create an account.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Step 2: Create Your API Key&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Open &lt;strong&gt;API Keys&lt;/strong&gt; in the dashboard.&lt;/li&gt;
+&lt;li&gt;Select &lt;strong&gt;Create new secret key&lt;/strong&gt; and optionally give it a project-specific name.&lt;/li&gt;
+&lt;li&gt;Copy the key when it is displayed; it may not be shown again.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Step 3: Store It Securely&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Store the key in a password manager or environment variable.&lt;/li&gt;
+&lt;li&gt;Never commit API keys to version control or expose them in client-side code.&lt;/li&gt;
+&lt;li&gt;If you use a &lt;code&gt;.env&lt;/code&gt; file, add it to &lt;code&gt;.gitignore&lt;/code&gt; and keep the file out of version control.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Security notes:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A key can grant access associated with your account and billing.&lt;/li&gt;
+&lt;li&gt;If a key is lost, create a replacement.&lt;/li&gt;
+&lt;li&gt;Revoke keys that may have been compromised.&lt;/li&gt;
+&lt;li&gt;Use separate, appropriately scoped keys for different projects when available.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Setting Up Your Development Environment&lt;/h2&gt;
+&lt;p&gt;The API can be used from any programming language that can make HTTP requests. Python, JavaScript, and Java are common choices.&lt;/p&gt;
+&lt;h3&gt;1. Python: Simplicity and a Rich Ecosystem&lt;/h3&gt;
+&lt;p&gt;Python’s syntax and library ecosystem make it a common choice. OpenAI’s Python package can simplify authentication, request formatting, and error handling. Packages such as &lt;code&gt;python-dotenv&lt;/code&gt; can help manage environment variables.&lt;/p&gt;
+&lt;p&gt;Python is also used in machine learning, data science, web development, and automation, making it useful for projects that combine API calls with data processing.&lt;/p&gt;
+&lt;h3&gt;2. JavaScript: Flexibility for Web Applications&lt;/h3&gt;
+&lt;p&gt;JavaScript works for backend applications with Node.js and for web applications using frameworks such as React, Vue, or Next.js. Its asynchronous features, including &lt;code&gt;async&lt;/code&gt;/&lt;code&gt;await&lt;/code&gt; and Promises, support non-blocking API requests.&lt;/p&gt;
+&lt;h3&gt;3. Java: Scalability and Performance&lt;/h3&gt;
+&lt;p&gt;Java is commonly used for enterprise applications. Static typing can catch some errors at compile time, and its concurrency features can help applications handle multiple requests. It can suit software that integrates with existing Java systems.&lt;/p&gt;
+&lt;p&gt;The examples below use Python. If you use JavaScript or Java, adapt the syntax to your language and SDK.&lt;/p&gt;
+&lt;h2&gt;Best Practices for Using the ChatGPT API&lt;/h2&gt;
+&lt;h3&gt;1. Write Clear and Specific Prompts&lt;/h3&gt;
+&lt;p&gt;Clear, specific instructions can improve the usefulness of responses.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Specify the desired format, tone, and length.&lt;/li&gt;
+&lt;li&gt;Provide examples when useful.&lt;/li&gt;
+&lt;li&gt;Use developer instructions to set behavior and context.&lt;/li&gt;
+&lt;li&gt;Break complex tasks into smaller steps.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Example:&lt;/p&gt;
+&lt;p&gt;prompt.py&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1# Bad prompt2response = client.chat.completions.create(3    model=&amp;quot;gpt-4.1&amp;quot;, messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Write about marketing&amp;quot;}]4)5
+6# Good prompt7response = client.chat.completions.create(8    model=&amp;quot;gpt-4.1&amp;quot;,9    messages=[10        {11            &amp;quot;role&amp;quot;: &amp;quot;system&amp;quot;,12            &amp;quot;content&amp;quot;: &amp;quot;You are a digital marketing expert who writes concise, actionable advice.&amp;quot;,13        },14        {15            &amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;,16            &amp;quot;content&amp;quot;: &amp;quot;Write a 3-paragraph email marketing strategy for a SaaS startup targeting small businesses. Focus on deliverability, segmentation, and automation.&amp;quot;,17        },18    ],19)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;2. Use Structured Outputs for Reliable Data&lt;/h3&gt;
+&lt;p&gt;For JSON or other structured data, use the API’s structured output features instead of parsing free-form text. Check the documentation for the supported format and constraints.&lt;/p&gt;
+&lt;p&gt;prompt.py&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1response = client.chat.completions.create(2    model=&amp;quot;gpt-4.1&amp;quot;,3    messages=[4        {5            &amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;,6            &amp;quot;content&amp;quot;: &amp;quot;Extract the product name, price, and category from: &amp;#x27;The new iPhone 15 Pro costs $999 and is in the smartphones category&amp;#x27;&amp;quot;,7        }8    ],9    response_format={10        &amp;quot;type&amp;quot;: &amp;quot;json_schema&amp;quot;,11        &amp;quot;json_schema&amp;quot;: {12            &amp;quot;name&amp;quot;: &amp;quot;product_extraction&amp;quot;,13            &amp;quot;schema&amp;quot;: {14                &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,15                &amp;quot;properties&amp;quot;: {16                    &amp;quot;product_name&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;},17                    &amp;quot;price&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;number&amp;quot;},18                    &amp;quot;category&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;},19                },20                &amp;quot;required&amp;quot;: [&amp;quot;product_name&amp;quot;, &amp;quot;price&amp;quot;, &amp;quot;category&amp;quot;],21            },22        },23    },24)25
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;3. Implement Streaming for Better User Experience&lt;/h3&gt;
+&lt;p&gt;Streaming can show response content as it arrives rather than waiting for the complete response.&lt;/p&gt;
+&lt;p&gt;prompt.py&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1stream = client.chat.completions.create(2    model=&amp;quot;gpt-4.1-mini&amp;quot;,3    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Explain quantum computing in simple terms&amp;quot;}],4    stream=True,5)6
+7for chunk in stream:8    if chunk.choices[0].delta.content:9        print(chunk.choices[0].delta.content, end=&amp;quot;&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;4. Manage Context and Token Limits&lt;/h3&gt;
+&lt;p&gt;A model’s context window limits the tokens available for input and output. Monitor usage to avoid truncation and unexpected costs.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Keep conversation history concise; summarize or trim older messages.&lt;/li&gt;
+&lt;li&gt;Use the appropriate output limit supported by the model and API.&lt;/li&gt;
+&lt;li&gt;Check response usage information.&lt;/li&gt;
+&lt;li&gt;Consider chunking or summarizing long documents.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;prompt.py&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1response = client.chat.completions.create( model=&amp;quot;gpt-4.1-mini&amp;quot;, messages=messages, max_tokens=500 # Limit response length )2
+3# Track usage print(f&amp;quot;Tokens used: {response.usage.total_tokens}&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;5. Handle Errors Gracefully&lt;/h3&gt;
+&lt;p&gt;Requests may fail because of network issues, rate limits, invalid input, or service outages. Handle errors according to the SDK and API documentation.&lt;/p&gt;
+&lt;p&gt;prompt.py&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1from openai import OpenAI, APIError, RateLimitError, APIConnectionError2import time3
+4
+5def make_api_call_with_retry(client, messages, max_retries=3):6    for attempt in range(max_retries):7        try:8            response = client.chat.completions.create(9                model=&amp;quot;gpt-4.1-mini&amp;quot;, messages=messages10            )11            return response12
+13        except RateLimitError:14            # Exponential backoff15            wait_time = (2**attempt) + 116            print(f&amp;quot;Rate limit hit. Retrying in {wait_time} seconds...&amp;quot;)17            time.sleep(wait_time)18
+19        except APIConnectionError:20            print(f&amp;quot;Connection error. Retrying... (Attempt {attempt + 1})&amp;quot;)21            time.sleep(2)22
+23        except APIError as e:24            print(f&amp;quot;API error: {e}&amp;quot;)25            return None26
+27    print(&amp;quot;Max retries exceeded&amp;quot;)28    return None
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;6. Optimize Costs&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Choose a model suited to the task and compare quality and cost.&lt;/li&gt;
+&lt;li&gt;Set an output limit to avoid unnecessarily long responses.&lt;/li&gt;
+&lt;li&gt;Cache results for repeated queries where appropriate.&lt;/li&gt;
+&lt;li&gt;Batch similar requests when supported and suitable.&lt;/li&gt;
+&lt;li&gt;Monitor spending in the &lt;a href="https://platform.openai.com/usage"&gt;OpenAI usage dashboard&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;prompt.py&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1# Cost-effective approach2response = client.chat.completions.create(3    model=&amp;quot;gpt-4.1-mini&amp;quot;,  # Cheaper model for simple tasks4    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: prompt}],5    max_tokens=150,  # Limit response length6    temperature=0.3,  # Lower temperature for more deterministic, cheaper outputs7)8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Consult the &lt;a href="https://openai.com/api/pricing/"&gt;OpenAI pricing page&lt;/a&gt; for current model prices.&lt;/p&gt;
+&lt;h3&gt;7. Implement Rate Limiting&lt;/h3&gt;
+&lt;p&gt;Rate limits may apply to requests and tokens over time, depending on account and service conditions. A 429 response indicates a rate-limit condition.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Use backoff when appropriate.&lt;/li&gt;
+&lt;li&gt;Track request rates and throttle if needed.&lt;/li&gt;
+&lt;li&gt;Check your account’s current limits and eligibility for changes.&lt;/li&gt;
+&lt;li&gt;Consider batch processing for suitable workloads.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;8. Use Function Calling for Tool Integration&lt;/h3&gt;
+&lt;p&gt;Function calling allows a model to request that your application call a function or tool. Your application handles the call and returns results as appropriate.&lt;/p&gt;
+&lt;p&gt;prompt.py&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;1tools = [2    {3        &amp;quot;type&amp;quot;: &amp;quot;function&amp;quot;,4        &amp;quot;function&amp;quot;: {5            &amp;quot;name&amp;quot;: &amp;quot;get_weather&amp;quot;,6            &amp;quot;description&amp;quot;: &amp;quot;Get current weather for a location&amp;quot;,7            &amp;quot;parameters&amp;quot;: {8                &amp;quot;type&amp;quot;: &amp;quot;object&amp;quot;,9                &amp;quot;properties&amp;quot;: {10                    &amp;quot;location&amp;quot;: {&amp;quot;type&amp;quot;: &amp;quot;string&amp;quot;, &amp;quot;description&amp;quot;: &amp;quot;City name&amp;quot;}11                },12                &amp;quot;required&amp;quot;: [&amp;quot;location&amp;quot;],13            },14        },15    }16]17
+18response = client.chat.completions.create(19    model=&amp;quot;gpt-4.1&amp;quot;,20    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;What&amp;#x27;s the weather in San Francisco?&amp;quot;}],21    tools=tools,22)23
+24# Check if model wants to call a function25if response.choices[0].message.tool_calls:26    # Execute your function and return results to the model27    pass
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;9. Secure Your API Key&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Never commit keys to version control.&lt;/li&gt;
+&lt;li&gt;Keep keys in environment variables or another secure store.&lt;/li&gt;
+&lt;li&gt;Rotate keys when needed and revoke old or exposed keys.&lt;/li&gt;
+&lt;li&gt;Use separate keys per project where available.&lt;/li&gt;
+&lt;li&gt;Monitor usage for unexpected activity.&lt;/li&gt;
+&lt;li&gt;Restrict key permissions where supported.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;10. Test with Different Models&lt;/h3&gt;
+&lt;p&gt;Compare models on representative workloads for quality, latency, and cost. Start with a model that meets your requirements and move to another if testing shows a need.&lt;/p&gt;
+&lt;h2&gt;Rate Limits and Access Tiers&lt;/h2&gt;
+&lt;p&gt;Limits and account tiers can change. Check the &lt;a href="https://platform.openai.com/usage"&gt;OpenAI usage dashboard&lt;/a&gt; and current documentation for account-specific limits, spending controls, and rate-limit details. When a request is rate-limited, follow the API’s guidance and use an appropriate backoff strategy.&lt;/p&gt;
+&lt;h2&gt;App Ideas to Build with the ChatGPT API&lt;/h2&gt;
+&lt;h3&gt;1. Customer Support Chatbots&lt;/h3&gt;
+&lt;p&gt;Build assistants that answer FAQs, track orders, troubleshoot issues, and provide customer support. Function calling can connect an application to CRM, ticketing, or order-management systems.&lt;/p&gt;
+&lt;h3&gt;2. Virtual Assistants for Productivity&lt;/h3&gt;
+&lt;p&gt;Build assistants that manage schedules, draft emails, organize tasks, summarize documents, and extract action items from meeting notes using productivity APIs.&lt;/p&gt;
+&lt;h3&gt;3. AI-Powered Educational Tools&lt;/h3&gt;
+&lt;p&gt;Create language-learning applications, interactive tutors, coding mentors, and study tools that generate practice questions and adapt to a learner’s needs.&lt;/p&gt;
+&lt;h3&gt;4. Content Creation Tools&lt;/h3&gt;
+&lt;p&gt;Build tools for drafting blog posts, social media content, email campaigns, product descriptions, and video scripts. Review generated content for accuracy and fit before publishing.&lt;/p&gt;
+&lt;h3&gt;5. Data Analysis and Insights&lt;/h3&gt;
+&lt;p&gt;Let users query databases in natural language, generate reports, identify trends, and create explanations of data. Validate outputs against the underlying data.&lt;/p&gt;
+&lt;h3&gt;6. Code Generation and Debugging&lt;/h3&gt;
+&lt;p&gt;Build code-generation, documentation, bug-finding, refactoring, or test-writing tools. Review generated code before using it.&lt;/p&gt;
+&lt;h3&gt;7. Knowledge Bases and Intelligent Search&lt;/h3&gt;
+&lt;p&gt;Create internal knowledge bases with conversational search, research assistants, and tools that summarize documents. Retrieval-augmented generation can connect a model to domain-specific material. Protect sensitive information and verify generated answers against source documents.&lt;/p&gt;
+&lt;h2&gt;Frequently Asked Questions&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Does ChatGPT have an API?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Yes. OpenAI provides an API for programmatic access to models. Applications can make HTTP requests or use official SDKs; check current documentation for available models and features.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;How much does the ChatGPT API cost?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Pricing depends on the model and usage. Check the &lt;a href="https://openai.com/api/pricing/"&gt;OpenAI pricing page&lt;/a&gt; for current rates and available cost-management options.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;What is the difference between ChatGPT and the ChatGPT API?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ChatGPT is a conversational product. The API lets developers send requests programmatically and integrate model responses into applications, with controls determined by the API and selected model.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;What is the newest model available in the ChatGPT API?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Model availability changes. Consult OpenAI’s current &lt;a href="https://developers.openai.com/api/docs"&gt;API documentation&lt;/a&gt; for the latest models and capabilities.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Should I use the Responses API or Chat Completions?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Choose an API based on your application and the features it needs. OpenAI’s documentation describes current endpoints and migration guidance. Existing applications should follow the documented support and migration instructions for their endpoint.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Can I use the ChatGPT API for free?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Costs and any credits depend on current account terms and usage. Check OpenAI’s pricing information before planning a budget.&lt;/p&gt;
+&lt;h2&gt;Build with the ChatGPT API&lt;/h2&gt;
+&lt;p&gt;Start with a proof of concept focused on one specific problem. Evaluate the result, cost, and reliability on representative inputs, then expand as needed.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Essential resources:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://developers.openai.com/api/docs"&gt;OpenAI API documentation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://developers.openai.com/api/docs/pricing"&gt;OpenAI API pricing&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://platform.openai.com/api-keys"&gt;OpenAI API keys&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://platform.openai.com/usage"&gt;OpenAI usage dashboard&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;ChatGPT API: How to Set Up, Pricing, and Code Examples (2026)&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/chatgpt-api-setup-pricing-code-examples-2026/"&gt;ChatGPT API: How to Set Up, Pricing, and Code Examples (2026)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Discover &lt;a href="https://ailoot.ai/"&gt;an API key issued by Ailoot&lt;/a&gt;. One Ailoot-issued API key gives you 1,284 models and variants across 15 categories. That catalogue puts Ailoot among the world’s largest AI routers by model count. Build with Claude, DeepSeek or Kimi alongside FLUX for images, Kling for video, Eleven v4 for speech, Lyria for music and Tripo3D for 3D. Ailoot also supports semantic search and structured decisions.&lt;/p&gt;
+&lt;p&gt;Create an Ailoot-issued key for your “&lt;a href="https://ailoot.ai/"&gt;chat gpt api key&lt;/a&gt;” project and use GPT-6.2 Astra or GPT-6.2 Sol through the Ailoot API. One balance also covers Claude, Gemini and media models.&lt;/p&gt;
+&lt;p&gt;Bring your “chatgpt api key” and “chatgpt api keys” projects to Ailoot alongside your other model workflows. Set limits on project keys in your Ailoot account. Ailoot workspaces give colleagues controlled access while the company manages spending centrally.&lt;/p&gt;
+&lt;p&gt;Use new flagship models from day one on the same Ailoot balance. One subscription covers the full catalogue. Subscriptions and promo codes can bring model costs down by up to 50% compared with official provider API prices. Open your account at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; or request a code from the team.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>n8n vs Zapier: Which Is Actually Better for Business Automation?</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100271.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100271.md</guid>

@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [ChatGPT API: How to Set Up, Pricing, and Code Examples (2026)](articles/guide-100277.md)
 - [n8n vs Zapier: Which Is Actually Better for Business Automation?](articles/guide-100271.md)
 - [Top 5 small language models for production (practical guide)](articles/guide-100270.md)
 - [AI content moderation: how it works, types, and the best APIs](articles/guide-100267.md)
