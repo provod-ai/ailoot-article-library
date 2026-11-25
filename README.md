@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [LLM inference cost: what drives it and how to lower it](articles/guide-100260.md)
 - [11 Best Text to Speech APIs for Developers in 2026](articles/guide-100259.md)
 - [Best TTS APIs in 2026: ElevenLabs vs. Google, Amazon, OpenAI & 7 More Compared](articles/guide-100255.md)
 - [Content Moderation API: The Complete Guide (2026)](articles/guide-100252.md)
@@ -25,3 +26,5 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 - [What Is AI Chat? Definition, How It Works, and Key Benefits](articles/guide-100230.md)
 - [What Is AI Customer Service? A Complete Guide to Software, Platforms & Solutions](articles/guide-100229.md)
 - [What are AI agents? Types and examples](articles/guide-100226.md)
+
+[Read the latest release in 30 languages](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss-localized.xml)

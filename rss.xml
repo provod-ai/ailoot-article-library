@@ -7,6 +7,60 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>LLM inference cost: what drives it and how to lower it</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100260.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100260.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/llm-inference-cost/</dc:source>
+      <pubDate>Wed, 25 Nov 2026 00:14:28 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;LLM inference cost: what drives it and how to lower it&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Understand the main factors behind LLM inference costs and practical ways to manage token use, model choice, context, and infrastructure.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;LLM inference is a trained model doing its job at runtime: turning your prompt into a response, token by token, on expensive accelerator hardware. Training builds the model once. Inference runs it forever, on every request, for every user.&lt;/p&gt;
+&lt;p&gt;Forever is the operative word for a budget. Training is a one-time capital event you read about in headlines. Inference cost is an operating expense that scales with success: more users, more features, more agents, more spend. A successful product’s cumulative inference bill laps its training bill and never looks back.&lt;/p&gt;
+&lt;p&gt;The meter is the token, roughly three quarters of an English word. All inference pricing reduces to per-million-token rates, quoted separately for input (your prompt and context) and output (what the model generates). The cost per token is tiny. The volume never is. Every dollar you will ever spend on inference is arithmetic on that meter.&lt;/p&gt;
+&lt;h2&gt;What does LLM inference cost per token actually mean?&lt;/h2&gt;
+&lt;p&gt;LLM inference cost per token is not one number. For any model it is at least four numbers, and the spread between them is where production bills are decided:&lt;/p&gt;
+&lt;h3&gt;Standard input versus output rates&lt;/h3&gt;
+&lt;p&gt;As above, output runs about 5x input. Cap max tokens per use case and instruct models toward brevity. Small percentage, every call, forever.&lt;/p&gt;
+&lt;h3&gt;Reasoning tokens&lt;/h3&gt;
+&lt;p&gt;Models that think before answering bill the thinking as output, the expensive kind, and the user never sees it. If your bill jumped without a usage jump, check whether a default quietly flipped to a reasoning mode. Sometimes the depth earns its cost. Often nobody checked.&lt;/p&gt;
+&lt;h2&gt;What drives LLM inference cost up?&lt;/h2&gt;
+&lt;p&gt;Five drivers, ordered by how often they explain a shocking invoice:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Unbounded output.&lt;/strong&gt; Verbose defaults, unset max token limits, and reasoning modes left on for easy tasks all inflate the expensive side of the meter. Nobody approves this spend because it arrives one wordy answer at a time, which is exactly why it compounds unwatched.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;How do you reduce LLM inference cost?&lt;/h2&gt;
+&lt;p&gt;LLM cost optimization comes down to eight levers. Ranked by effort against savings:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Route on cost, latency, and quality together.&lt;/strong&gt; Good routers score all three; quality-only routing is how budgets die. Even a two-tier router, cheap model first with escalation on low confidence, captures most of the value and is a weekend of engineering.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Impose output discipline.&lt;/strong&gt; Max token caps per use case, concise-answer instructions, and no paying output rates for pleasantries.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;Measure per feature before optimizing anything.&lt;/strong&gt; The uncomfortable one. None of the seven levers above can be aimed without knowing which product, feature, or customer generates the spend. LLM inference optimization without allocation is guessing with confidence, and it reliably tunes the visible chatbot while the background pipeline burns 80% of the budget.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;Should you self-host to cut inference costs?&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Only if you can keep the hardware busy.&lt;/strong&gt; Self-hosting trades a per-token meter for a per-hour one, and the entire business case lives in utilization. Sustained, predictable, high-volume traffic on a busy cluster beats API rates decisively. Spiky or modest traffic on idle GPUs loses to the API every time, and you inherit an ops team as a consolation prize.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Then benchmark honestly:&lt;/strong&gt; published LLM inference benchmark data measures tokens per second per GPU under your actual batch sizes and context lengths, and it is the difference between a plan and a hope. The AI inference economics here reward the boring answer. If volume is uncertain or engineering appetite is thin, stay on APIs and spend the energy on the eight levers above.&lt;/p&gt;
+&lt;h2&gt;How do you track LLM inference cost to the product level?&lt;/h2&gt;
+&lt;p&gt;Start from the question no provider dashboard answers: which feature, team, or customer generated this spend, and was it worth it? API consoles report totals by key. Totals do not survive contact with a CFO who wants the margin impact of the new AI feature, in numbers, by Thursday.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Getting to answers takes three layers.&lt;/strong&gt; Tag usage by feature and environment so consumption has an owner. Normalize across providers into one view, because multi-model stacks are the norm and every vendor reports differently. Then allocate to unit economics: inference spend per feature, per customer, per transaction, the denominators the business actually runs on.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/llm-inference-cost/"&gt;LLM inference cost: what drives it and how to lower it&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With 1,284 models and variants across 15 categories, Ailoot is one of the world’s largest AI routers by model count. Explore &lt;a href="https://ailoot.ai/"&gt;API cost savings with Ailoot&lt;/a&gt; with a key issued by Ailoot. Choose Claude or Qwen for code, FLUX for images, Kling for video, Scribe for transcription, Lyria for music and Tripo3D for 3D assets. BGE embeddings support semantic search.&lt;/p&gt;
+&lt;p&gt;Give your product access to leading text, code and media models through the &lt;a href="https://ailoot.ai/"&gt;Ailoot API&lt;/a&gt;. Put reasoning with Claude, image generation with FLUX and video with Kling into one workflow.&lt;/p&gt;
+&lt;p&gt;“cheapest ai inference api cost” — One Ailoot subscription covers the model catalogue. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices, with additional discounts available for volume.&lt;/p&gt;
+&lt;p&gt;New flagship models are available on Ailoot at launch. One subscription covers the full catalogue, and subscriptions and promo codes can save up to 50% on official provider API prices. Find your current offers at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>11 Best Text to Speech APIs for Developers in 2026</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100259.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100259.md</guid>
