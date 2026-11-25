@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Zapier vs n8n: What You Trade for Self-Hosting](articles/guide-100286.md)
 - [n8n vs Zapier: Features, Pricing Models, and Workflow Design](articles/guide-100283.md)
 - [7 Criteria for Choosing an LLM Routing Tool](articles/guide-100282.md)
 - [OpenAI Moderation API Pricing: Free, Rate Limits, and Alternatives](articles/guide-100281.md)
