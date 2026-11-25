@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Top 5 small language models for production (practical guide)](articles/guide-100270.md)
 - [AI content moderation: how it works, types, and the best APIs](articles/guide-100267.md)
 - [What is AI Inference? A Complete Guide](articles/guide-100264.md)
 - [LLM inference cost: what drives it and how to lower it](articles/guide-100260.md)
