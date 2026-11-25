@@ -7,6 +7,98 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>AI content moderation: how it works, types, and the best APIs</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100267.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100267.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/ai-content-moderation/</dc:source>
+      <pubDate>Wed, 25 Nov 2026 04:32:38 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;AI content moderation: how it works, types, and the best APIs&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn the main content moderation approaches, how automated systems fit into review workflows, and what to measure when evaluating them.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Content moderation used to be a text problem. Someone posted something, a classifier scored it, a human reviewed the borderline cases, and the queue mostly kept up.
+Then platforms got audio and video, and the queue stopped keeping up. A 45-minute podcast, a live stream, a voice agent conversation, a user-uploaded video — none of them can be scanned by a text classifier until something turns the speech into text first. And the volume is not close to reviewable by hand. That&amp;#x27;s the problem AI content moderation exists to solve, and the reason the interesting engineering has moved from &amp;quot;is this string toxic?&amp;quot; to &amp;quot;what&amp;#x27;s actually being said across ten thousand hours of audio, and which ninety seconds does a human need to look at?&amp;quot;
+This post covers what AI content moderation is, the six types you&amp;#x27;ll be asked about, how automated and hybrid systems actually work, which APIs are worth evaluating, and — the part most guides skip — how to measure whether yours is any good.&lt;/p&gt;
+&lt;h2&gt;What is AI content moderation?&lt;/h2&gt;
+&lt;p&gt;AI content moderation is the use of machine learning models to automatically detect, classify, and act on content that violates a platform&amp;#x27;s policies or legal obligations, across text, images, video, and audio.
+The &amp;quot;AI&amp;quot; part is doing specific work in that sentence. Rule-based moderation — banned word lists, regex patterns, hash matching — is still in production everywhere and still useful, but it can&amp;#x27;t read context. A model can tell the difference between a slur used as an attack and the same word quoted in a news report; a word list cannot. That contextual judgment is what separates AI content moderation from filtering.&lt;/p&gt;
+&lt;h3&gt;Content moderation meaning, in practice&lt;/h3&gt;
+&lt;p&gt;Strip out the vendor language and content moderation means three operations:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Detect&lt;/strong&gt; — find content that might violate policy.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Classify&lt;/strong&gt; — say which policy, and how severely.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Act&lt;/strong&gt; — remove, age-gate, demonetize, flag for human review, or do nothing.
+Most moderation failures are failures of step three, not step one. Teams build a detector, wire it straight to an automatic takedown, and discover that a 5% false positive rate on a large platform means thousands of wrongly removed posts per day — plus an appeals backlog nobody staffed for.
+The useful mental model: a moderation system&amp;#x27;s job isn&amp;#x27;t to make decisions. It&amp;#x27;s to route decisions to the right place, most of which is automated, some of which is human, and a small tail of which is a policy question nobody has answered yet.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2&gt;6 types of AI content moderation&lt;/h2&gt;
+&lt;p&gt;These six show up in every serious moderation architecture. Most platforms run three or four of them simultaneously, applied to different content tiers.&lt;/p&gt;
+&lt;h3&gt;1. Pre-moderation&lt;/h3&gt;
+&lt;p&gt;Content is reviewed before it goes live. Nothing publishes until it clears.
+This is the safest option and the slowest, so it survives where the cost of a miss is catastrophic and the volume is low: children&amp;#x27;s platforms, healthcare communities, regulated financial content, dating profile photos. The friction is real — users notice a publish delay — which is why pre-moderation usually applies to a subset of content types rather than everything.&lt;/p&gt;
+&lt;h3&gt;2. Post-moderation&lt;/h3&gt;
+&lt;p&gt;Content publishes immediately and gets reviewed after, usually within minutes. Violations come down once detected.
+This is the default for most social and UGC platforms. It preserves the real-time feel users expect and accepts a short exposure window as the cost. The engineering question is how short that window actually is, which for audio and video depends entirely on how fast you can transcribe.&lt;/p&gt;
+&lt;h3&gt;3. Reactive moderation&lt;/h3&gt;
+&lt;p&gt;Nothing is reviewed until a user reports it. The community is the detector.
+Cheap, scalable, and structurally biased — reactive moderation systematically under-catches violations in small communities, in languages the majority of users don&amp;#x27;t speak, and in any content that harms people who aren&amp;#x27;t there to report it. Nobody runs this alone anymore, but it remains a valuable signal layer on top of automated detection because human reports surface the things models were never trained to look for.&lt;/p&gt;
+&lt;h3&gt;4. Distributed or community moderation&lt;/h3&gt;
+&lt;p&gt;Trusted users, volunteer moderators, or reputation-weighted voting make the call. Think subreddit moderators or community notes.
+It scales well culturally, because the people applying norms are the people who hold them, and it scales badly legally — a volunteer isn&amp;#x27;t a compliance program. It works best as a layer inside a larger system rather than as the system.&lt;/p&gt;
+&lt;h3&gt;5. Automated moderation&lt;/h3&gt;
+&lt;p&gt;Models do the detection and, for high-confidence cases, the enforcement. This is the layer this post is mostly about.
+Automated moderation covers text classification, image and video classification, hash matching for known-bad media, and — increasingly — audio. The audio path is the one most teams haven&amp;#x27;t built: speech-to-text converts the spoken content into text, then content safety models classify it by topic and severity, and entity detection plus PII redaction handle the privacy side.&lt;/p&gt;
+&lt;h3&gt;6. Hybrid moderation&lt;/h3&gt;
+&lt;p&gt;Models triage; humans decide the hard cases. This is what mature platforms actually run, and it&amp;#x27;s less a distinct type than the correct assembly of the other five.
+The design question in hybrid moderation is where the threshold sits. Set it too aggressively and your human queue fills with obvious non-violations; set it too loosely and violations slip through automated approval. Getting that threshold right is an ongoing measurement exercise, not a launch decision — which is why the accuracy section below matters more than the API comparison.
+Moderate Audio and Video at Scale
+Turn spoken content into classified, reviewable text with content safety detection built in. Start free and test it on your own media.&lt;/p&gt;
+&lt;h2&gt;How automated content moderation works&lt;/h2&gt;
+&lt;p&gt;Under the hood, an automated moderation pipeline has four stages. Understanding them is the difference between buying a moderation API and building a moderation system.
+&lt;strong&gt;Stage one: ingest and normalize.&lt;/strong&gt; Content arrives in whatever format users produce — a JPEG, an MP4, a 30-second voice note, a two-hour live stream. Normalization means getting each modality into something a model can score. For audio and video, that means speech-to-text first. This stage is where most latency lives and where most accuracy is lost, because everything downstream reads the transcript, not the audio.
+&lt;strong&gt;Stage two: classify.&lt;/strong&gt; One or more models score the normalized content against a policy taxonomy — hate speech, harassment, self-harm, violence, sexual content, weapons, drugs, gambling, and so on — each with a confidence score. Good taxonomies are hierarchical, so you can enforce differently on &amp;quot;violence&amp;quot; in a news clip than in a threat.
+&lt;strong&gt;Stage three: decide.&lt;/strong&gt; Scores hit a policy engine that applies thresholds, content-type rules, user reputation, and jurisdiction. This is the layer teams most often underbuild. A single global threshold is almost never right: the bar for a comment on a kids&amp;#x27; app and a comment on a gaming forum are different bars, and they should be different numbers in config, not different models.
+&lt;strong&gt;Stage four: act and record.&lt;/strong&gt; Enforcement plus an audit trail. The audit trail is not optional if you operate in the EU, and it&amp;#x27;s what makes appeals tractable. Store the score, the model version, the threshold that applied, and the resulting action.&lt;/p&gt;
+&lt;h3&gt;Why audio is the hard modality&lt;/h3&gt;
+&lt;p&gt;Text moderation gets the content for free. Audio moderation has to earn it, and everything the automatic speech recognition layer gets wrong propagates.
+Three failure modes show up repeatedly:
+&lt;strong&gt;Missed negations and short words.&lt;/strong&gt; Drop &amp;quot;not&amp;quot; from &amp;quot;I&amp;#x27;m not going to hurt you&amp;quot; and you&amp;#x27;ve manufactured a threat. Short function words are exactly what a weaker model drops in noisy audio.
+&lt;strong&gt;Entity errors.&lt;/strong&gt; Names, places, and numbers carry most of the meaning in a violation report. A model that garbles a named target turns a harassment case into an unmatchable string.
+&lt;strong&gt;Speaker confusion.&lt;/strong&gt; In a multi-speaker recording, moderation without reliable speaker diarization can&amp;#x27;t tell you who said the thing. For a livestream with a host and callers, or a voice agent conversation, that&amp;#x27;s the entire question.
+The practical consequence: the accuracy of your audio moderation is capped by the accuracy of your transcription, and no amount of classifier tuning raises that ceiling. Teams that discover this late usually discover it during an incident review.&lt;/p&gt;
+&lt;h2&gt;How to measure moderation accuracy at scale&lt;/h2&gt;
+&lt;p&gt;This is the section that separates teams who improve from teams who ship a dashboard and hope.
+&lt;strong&gt;Stop using overall accuracy.&lt;/strong&gt; On any real platform, the vast majority of content is fine, so a model that approves everything scores 97% accurate and is worthless. Use precision and recall per policy category, and track them separately.
+&lt;strong&gt;Set the threshold from the cost asymmetry, not from the F1 score.&lt;/strong&gt; For child safety content, a false negative is catastrophic and a false positive costs a reviewer 30 seconds — bias hard toward recall. For a political speech category, a false positive is a public relations incident — bias toward precision. These are different numbers and they belong in config, reviewed quarterly.
+&lt;strong&gt;Build a gold set and keep it fresh.&lt;/strong&gt; A few thousand items, labeled by humans against your actual policy, refreshed continuously as your content mix shifts. Without it you cannot tell whether a model update helped. With it, evaluation becomes a one-hour job instead of a quarter-long argument.
+&lt;strong&gt;Measure the transcript separately from the classifier.&lt;/strong&gt; This is the audio-specific step nearly everyone skips. When a violation escapes, determine whether the speech model missed the words or the classifier missed the meaning. They demand completely different fixes — better transcription configuration versus threshold or taxonomy work — and if you don&amp;#x27;t separate them you&amp;#x27;ll spend months tuning the wrong layer. The techniques in how to evaluate speech recognition models apply directly here.
+&lt;strong&gt;Track reviewer agreement.&lt;/strong&gt; If two human reviewers disagree on 20% of your queue, no model can hit 95% precision against that label set — the ceiling is your policy&amp;#x27;s ambiguity, not the model&amp;#x27;s capability. Low inter-rater agreement is a policy bug reported as a model bug.
+&lt;strong&gt;Watch the appeal overturn rate.&lt;/strong&gt; It&amp;#x27;s the cleanest real-world precision signal you have, because it&amp;#x27;s produced by the people most motivated to find your false positives.&lt;/p&gt;
+&lt;h2&gt;Frequently asked questions&lt;/h2&gt;
+&lt;h3&gt;What is AI content moderation?&lt;/h3&gt;
+&lt;p&gt;AI content moderation is the use of machine learning models to automatically detect, classify, and act on content that breaks a platform&amp;#x27;s policies or legal obligations, across text, images, video, and audio. Unlike rule-based filtering, which matches banned words or hashes, AI moderation evaluates context — so it can distinguish a slur used as an attack from the same word quoted in a news report. Most production systems pair automated classification with human review of borderline cases.&lt;/p&gt;
+&lt;h3&gt;What is the meaning of content moderation?&lt;/h3&gt;
+&lt;p&gt;Content moderation means reviewing user-generated content against a set of rules and deciding what happens to it: publish, remove, age-gate, demonetize, or send to a human. It covers three operations — detect, classify, and act — and applies to every modality a platform accepts. The classification step is where AI does the most work today; the acting step is where most platforms make the most mistakes, because a single global threshold rarely fits every content type.&lt;/p&gt;
+&lt;h3&gt;What are the 6 types of content moderation?&lt;/h3&gt;
+&lt;p&gt;The six types are pre-moderation (review before publishing), post-moderation (publish first, review immediately after), reactive moderation (review only on user report), distributed or community moderation (trusted users decide), automated moderation (models detect and enforce), and hybrid moderation (models triage, humans decide the hard cases). Most mature platforms run several at once, applying different types to different content tiers and risk levels.&lt;/p&gt;
+&lt;h3&gt;Can a speech-to-text API detect profanity and unsafe content in audio?&lt;/h3&gt;
+&lt;p&gt;Yes. AssemblyAI says it returns content safety labels, profanity filtering, entity detection across 50+ types, topic classification, and PII redaction in text and audio as part of the same transcription request through its Guardrails and Speech Understanding API. Labels come back with timestamps, so a reviewer is sent to the 90 seconds that matter rather than a 50-minute file. The same capabilities run on live audio over the streaming WebSocket for real-time moderation.&lt;/p&gt;
+&lt;h3&gt;What is the best content moderation API?&lt;/h3&gt;
+&lt;p&gt;It depends on the modality you actually need to cover. Text-only platforms are well served by dedicated text moderation endpoints; visual platforms need image and video classification; general safety platforms bundle both with policy tooling. For audio and video platforms, the deciding factor is whether the vendor owns the transcription as well as the classification — classifying someone else&amp;#x27;s transcript gives you two accuracy problems and no way to debug an escape end to end.&lt;/p&gt;
+&lt;h3&gt;How do you measure whether content moderation is working?&lt;/h3&gt;
+&lt;p&gt;Track precision and recall per policy category rather than overall accuracy, which is meaningless when most content is compliant. Maintain a human-labeled gold set that refreshes as your content mix changes, set thresholds from the cost asymmetry between false positives and false negatives in each category, and watch your appeal overturn rate as a real-world precision signal. For audio, always measure the transcript separately from the classifier — a missed violation caused by a transcription error needs a completely different fix.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/ai-content-moderation/"&gt;AI content moderation: how it works, types, and the best APIs&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Discover &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt;. Ailoot issues its own API key for 1,284 models and variants across 15 categories. It is one of the world’s largest AI routers by model count. The same key covers GPT, Claude, Gemini, Grok, Qwen and DeepSeek, plus Nano Banana for photos, Veo for video, Eleven v4 for speech, Suno for music, Tripo3D for 3D and BGE for search.&lt;/p&gt;
+&lt;p&gt;“moderation api” — Use Mercury Decide, Jev or Clef through Ailoot to add structured decisions to your workflow. Pair them with models that analyze documents and generate text.&lt;/p&gt;
+&lt;p&gt;Build your classification and routing features into an app with the &lt;a href="https://ailoot.ai/"&gt;Ailoot API&lt;/a&gt;. Monitor model usage across projects and manage company spend through one workspace.&lt;/p&gt;
+&lt;p&gt;Ailoot adds new flagship models at launch, and one subscription covers the full catalogue. Find a promo code in your account at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>What is AI Inference? A Complete Guide</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100264.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100264.md</guid>
