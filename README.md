@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Best AI Content Moderation APIs and Tools in 2026: A Complete Comparison](articles/guide-100289.md)
 - [The LLM Inference Trilemma: Throughput, Latency, Cost](articles/guide-100288.md)
 - [What is an LLM router?](articles/guide-100287.md)
 - [Zapier vs n8n: What You Trade for Self-Hosting](articles/guide-100286.md)
