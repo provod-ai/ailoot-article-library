@@ -7,6 +7,103 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Claude API for Beginners: A Practical Getting-Started Guide</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100309.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100309.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/claude-api-beginners-practical-getting-started-guide/</dc:source>
+      <pubDate>Thu, 26 Nov 2026 12:04:44 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;Claude API for Beginners: A Practical Getting-Started Guide&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A beginner’s guide to the Claude API, covering setup, a first request, model selection, core features, and production practices.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Everything a developer needs to make a first Claude API call: keys, the Messages API, model selection, and the core concepts for moving from a first request to production.&lt;/p&gt;
+&lt;h2&gt;What the Claude API Is&lt;/h2&gt;
+&lt;p&gt;The Claude API is Anthropic’s developer platform. It provides programmatic access to Claude models through the Messages API, with system prompts, tool use, streaming, vision, and structured outputs.&lt;/p&gt;
+&lt;p&gt;The Messages API is a stateless HTTP endpoint. You send a list of user and assistant messages, a model ID, and a token limit; Claude returns a structured response. Supporting endpoints include batches, files, and token counting.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Stateless:&lt;/strong&gt; The API keeps no memory. Resend the conversation history with every call.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Model selection:&lt;/strong&gt; Changing models typically means changing the model ID.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;SDKs:&lt;/strong&gt; Official Python (anthropic) and TypeScript (@anthropic-ai/sdk) libraries use corresponding request shapes.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Understanding this architecture helps avoid a common beginner mistake: expecting the API to remember a previous request.&lt;/p&gt;
+&lt;h2&gt;Step 1: Get a Key and Set Up the Console&lt;/h2&gt;
+&lt;p&gt;Go to &lt;strong&gt;console.anthropic.com&lt;/strong&gt;, create an account or an organization for your team, and generate an API key in the settings area. Treat the key like a password: store it in an environment variable and never put it in source control.&lt;/p&gt;
+&lt;p&gt;Raw HTTP calls use an &lt;strong&gt;x-api-key&lt;/strong&gt; header and an &lt;strong&gt;anthropic-version&lt;/strong&gt; header. The SDKs automatically read &lt;strong&gt;ANTHROPIC_API_KEY&lt;/strong&gt; from the environment, so most code does not handle the key directly.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create separate keys for development, staging, and production.&lt;/li&gt;
+&lt;li&gt;Use workspaces to isolate team projects and spending.&lt;/li&gt;
+&lt;li&gt;Set usage limits in the Console before giving keys to a wider team.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Step 2: Make Your First Messages API Call&lt;/h2&gt;
+&lt;p&gt;Install the SDK with &lt;strong&gt;pip install anthropic&lt;/strong&gt;, export your key, and run:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;import anthropic
+
+client = anthropic.Anthropic()
+msg = client.messages.create(
+    model=&amp;quot;claude-opus-5-5&amp;quot;,
+    max_tokens=1024,
+    messages=[{&amp;quot;role&amp;quot;: &amp;quot;user&amp;quot;, &amp;quot;content&amp;quot;: &amp;quot;Explain REST in one paragraph.&amp;quot;}],
+)
+for block in msg.content:
+    if block.type == &amp;quot;text&amp;quot;:
+        print(block.text)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Three parameters are required: &lt;strong&gt;model&lt;/strong&gt;, &lt;strong&gt;max_tokens&lt;/strong&gt; (the output ceiling), and &lt;strong&gt;messages&lt;/strong&gt;. The response contains a list of content blocks. Check each block’s type rather than assuming it is plain text, because tool use and thinking can add other block types. The &lt;strong&gt;usage&lt;/strong&gt; object reports input and output tokens, which can serve as cost telemetry.&lt;/p&gt;
+&lt;h2&gt;Step 3: Pick a Model&lt;/h2&gt;
+&lt;p&gt;Here are Anthropic’s current Claude models and their API IDs.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Claude Haiku 5.5&lt;/strong&gt; (&lt;strong&gt;claude-haiku-5-5&lt;/strong&gt;) — described as fast and low-cost, for classification and high-volume simple tasks.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Sonnet 5.5&lt;/strong&gt; (&lt;strong&gt;claude-sonnet-5-5&lt;/strong&gt;) — described as a balanced option for production workloads, including coding.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Opus 5.5&lt;/strong&gt; (&lt;strong&gt;claude-opus-5-5&lt;/strong&gt;) — described for hard reasoning and long-horizon agentic work.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Claude Fable 5.2&lt;/strong&gt; (&lt;strong&gt;claude-fable-5-2&lt;/strong&gt;) — described as a flagship for demanding reasoning tasks.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Start with Opus 5.5. Evaluate Sonnet 5.5 for a balance of speed and quality, Haiku 5.5 for simple high-volume tasks, and Fable 5.2 for demanding reasoning. Consult Anthropic’s pricing page for current rates.&lt;/p&gt;
+&lt;h2&gt;The Five Concepts to Learn Next&lt;/h2&gt;
+&lt;p&gt;Once a first request works, these features cover many application needs:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;System prompts&lt;/strong&gt; — a top-level &lt;strong&gt;system&lt;/strong&gt; parameter that sets role, tone, and rules, separate from user messages.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Multi-turn conversations&lt;/strong&gt; — append each assistant reply to the messages array and resend it; the first message must be a user turn.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Streaming&lt;/strong&gt; — server-sent events deliver tokens as they are generated, which can help with chat interfaces and long outputs.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vision&lt;/strong&gt; — pass images as base64 or URL content blocks alongside text.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Tool use&lt;/strong&gt; — define functions with JSON schemas; Claude can decide when to call them, while your code executes them and returns results.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Consider &lt;strong&gt;prompt caching&lt;/strong&gt; and &lt;strong&gt;batch processing&lt;/strong&gt; when cost matters, and &lt;strong&gt;structured outputs&lt;/strong&gt; when downstream code must parse a response.&lt;/p&gt;
+&lt;h2&gt;From Tutorial to Production&lt;/h2&gt;
+&lt;p&gt;Moving from a working script to a production integration calls for engineering discipline:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Error handling:&lt;/strong&gt; Handle rate-limit (429) and server errors distinctly. The source says the SDKs retry these automatically with backoff; check the relevant SDK documentation for current behavior.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cost visibility:&lt;/strong&gt; Log &lt;strong&gt;usage&lt;/strong&gt; from every response in your metrics system.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prompt versioning:&lt;/strong&gt; Treat prompts like code: review and version them, and test against a small evaluation set.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Model pinning:&lt;/strong&gt; Reference model IDs from configuration so upgrades are deliberate and tested.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;Key takeaways&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;The Messages API is stateless; resend conversation history with every call.&lt;/li&gt;
+&lt;li&gt;Raw HTTP authentication uses an x-api-key header; SDKs can read ANTHROPIC_API_KEY from the environment.&lt;/li&gt;
+&lt;li&gt;The three required request parameters are model, max_tokens, and messages.&lt;/li&gt;
+&lt;li&gt;Start with Opus 5.5 and compare the alternatives on your own data.&lt;/li&gt;
+&lt;li&gt;System prompts, streaming, vision, tool use, and multi-turn history support many application patterns.&lt;/li&gt;
+&lt;li&gt;Log token usage for cost visibility and capacity planning.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;FAQ&lt;/h2&gt;
+&lt;h3&gt;Do I need to know machine learning to use the Claude API?&lt;/h3&gt;
+&lt;p&gt;No. The Claude API is a REST API with official Python and TypeScript SDKs. If you can call an HTTP endpoint and parse JSON, you can build with Claude. Prompt design, error handling, and cost management are useful engineering skills; machine-learning theory is not required to make a first API call.&lt;/p&gt;
+&lt;h3&gt;Which Claude model should a beginner start with?&lt;/h3&gt;
+&lt;p&gt;Anthropic recommends starting with Claude Opus 5.5 (API model ID &lt;code&gt;claude-opus-5-5&lt;/code&gt;) for most workloads. Once your prompts are stable, compare the other models on your own data.&lt;/p&gt;
+&lt;h3&gt;Does the Claude API remember previous conversations?&lt;/h3&gt;
+&lt;p&gt;No. The Messages API is stateless. Your application stores the conversation and resends the full message history with each request. This gives you control over context, lets you trim or summarize older turns, and can be combined with prompt caching.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/claude-api-beginners-practical-getting-started-guide/"&gt;Claude API for Beginners: A Practical Getting-Started Guide&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Explore &lt;a href="https://ailoot.ai/"&gt;the Ailoot alternative to a Claude API key&lt;/a&gt; for your next project. Developers can use one Ailoot-issued key for 1,284 models and variants across 15 categories, putting Ailoot among the world’s largest AI routers by model count. Pair GPT-6.2 Astra or Qwen4 Max for code with Nano Banana for photos, Veo for video, Scribe for transcription, Suno for music and Tripo3D for 3D. The same API supports embeddings and reranking.&lt;/p&gt;
+&lt;p&gt;Create an Ailoot-issued key for your “&lt;a href="https://ailoot.ai/"&gt;claude api key&lt;/a&gt;” project and use it with Claude Opus 5.5 or Claude Sonnet 5.5 through the Ailoot API. Your Ailoot balance also covers GPT, Gemini and other models.&lt;/p&gt;
+&lt;p&gt;“claude api keys” and “how to get claude api key” — Create a separate key for each project in Ailoot and configure its limits. Keep team access and company spending together in the Ailoot workspace.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue, with day-one access to new flagship models through the same key. Subscriptions and promo codes offer savings of up to 50% compared with official provider API prices. Get your key at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; and check your account for a promo code.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>7 Approaches to Production AI Model Access</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100293.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100293.md</guid>
