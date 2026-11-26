@@ -7,6 +7,78 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>What is an LLM router?</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100287.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100287.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/what-is-an-llm-router/</dc:source>
+      <pubDate>Thu, 26 Nov 2026 00:28:23 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;What is an LLM router?&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn how LLM routers select models by cost, latency, confidentiality, and quality, and how routing relates to gateways and fallback.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Definition:&lt;/strong&gt; An LLM router is a control-plane layer between your application and multiple AI models that sends each request to the most suitable model based on cost, latency, quality and confidentiality. It cuts spend, removes single-vendor dependence, and adds automatic failover.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;An LLM router (also &lt;em&gt;AI gateway&lt;/em&gt;, &lt;em&gt;model router&lt;/em&gt; or &lt;em&gt;LLM broker&lt;/em&gt;) is a layer between your application and many models. Instead of coding against one provider&amp;#x27;s API, your application calls the router, which picks the best model per request and exposes one unified interface.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Analyzes each request (task type, complexity, sensitivity)&lt;/li&gt;
+&lt;li&gt;Selects the optimal model (cheap model for simple tasks, frontier model for hard ones)&lt;/li&gt;
+&lt;li&gt;Handles load balancing and failover across providers&lt;/li&gt;
+&lt;li&gt;Routing can lower costs when the selected models meet your quality requirements.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;LLM router vs. AI gateway: what&amp;#x27;s the difference?&lt;/h2&gt;
+&lt;p&gt;They overlap. A &lt;strong&gt;router&lt;/strong&gt; emphasizes per-request model selection; an &lt;strong&gt;AI gateway&lt;/strong&gt; adds auth, governance and observability; a &lt;strong&gt;broker&lt;/strong&gt; emphasizes vendor-neutral mediation across many providers. A strong solution does all three.&lt;/p&gt;
+&lt;h2&gt;How does LLM routing work?&lt;/h2&gt;
+&lt;p&gt;The router scores each request against four criteria:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Cost&lt;/strong&gt; — simple tasks to cheap models, expensive ones only when needed.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Latency&lt;/strong&gt; — time-critical requests to fast, small models.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Confidentiality / protection class&lt;/strong&gt; — Send sensitive requests only to approved services and locations.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Quality&lt;/strong&gt; — complex tasks to frontier models.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Routing can be &lt;strong&gt;static&lt;/strong&gt; (rules), &lt;strong&gt;dynamic&lt;/strong&gt; (scoring/model-based), &lt;strong&gt;hybrid&lt;/strong&gt;, or &lt;strong&gt;learned (RL)&lt;/strong&gt;.&lt;/p&gt;
+&lt;h2&gt;How much does LLM routing save? (the evidence)&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;RouteLLM&lt;/strong&gt; (UC Berkeley/LMSYS, arXiv 2406.18665): On MT Bench, the authors reported about 85% lower cost at about 95% of GPT-4’s score, compared with using GPT-4 for every request [R1].&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AWS Bedrock Intelligent Prompt Routing:&lt;/strong&gt; AWS estimates cost savings of up to 30% when routing between models in the same family &lt;a href="https://aws.amazon.com/bedrock/intelligent-prompt-routing/"&gt;[R2]&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Cost spread:&lt;/strong&gt; Prices vary by model and provider. Compare current rates for input and output tokens when choosing models.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Vendor-agnostic routing: how it ends vendor lock-in&lt;/h2&gt;
+&lt;p&gt;A provider&amp;#x27;s own router locks you in one level higher. A &lt;strong&gt;vendor-agnostic&lt;/strong&gt; broker abstracts across providers (OpenAI, Anthropic, Google, Mistral, open-weight), so switching models is configuration, not code. This is the direct fix for AI vendor lock-in.&lt;/p&gt;
+&lt;h2&gt;EU-sovereign and on-prem LLM routing&lt;/h2&gt;
+&lt;p&gt;A router can keep sensitive requests on approved EU-hosted or on-premises models and send public requests to lower-cost cloud models where allowed. Verify how each service processes and stores data against applicable requirements.&lt;/p&gt;
+&lt;h2&gt;Build vs. buy&lt;/h2&gt;
+&lt;p&gt;Total cost of ownership — and whether protection classes and EU sovereignty must be built in — decide the call.&lt;/p&gt;
+&lt;h2&gt;FAQ&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;What is an LLM router?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;An LLM router is a software layer between your application and multiple AI models that routes each request to the most suitable model by cost, latency, quality and confidentiality, providing one unified API.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;How does LLM routing work?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;It scores each request and selects a model using static rules, dynamic scoring, or learned policies — sending simple tasks to cheap models and hard ones to frontier models.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Is an LLM router the same as an AI gateway?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Not exactly. A router emphasizes model selection per request; a gateway adds auth, governance and observability. Strong platforms combine both, plus vendor-neutral brokering.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;How much does an LLM router save?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;On MT Bench, the RouteLLM authors reported about 85% lower cost at about 95% of GPT-4’s score, compared with using GPT-4 for every request. AWS estimates cost savings of up to 30% when routing between models in the same family. Actual savings vary with the workload.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Does routing hurt answer quality?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Quality depends on the tasks, models and routing rules. Test the rules on requests representative of your workload.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Can I run an LLM router on-premise / in the EU?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Yes, if the router and models support this deployment. Specify which services may handle sensitive requests and verify applicable data-processing requirements.&lt;/p&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;[R1] RouteLLM, UC Berkeley/LMSYS, arXiv 2406.18665.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://aws.amazon.com/bedrock/intelligent-prompt-routing/"&gt;[R2] AWS Bedrock Intelligent Prompt Routing&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/what-is-an-llm-router/"&gt;What is an LLM router?&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Discover &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt;. One Ailoot-issued API key gives you 1,284 models and variants across 15 categories. That catalogue puts Ailoot among the world’s largest AI routers by model count. Use Claude for code, Gemini for document analysis, Nano Banana for photo editing, Veo for video, Eleven v4 for voiceovers, Suno for music and Tripo3D for 3D objects.&lt;/p&gt;
+&lt;p&gt;“best unified api for accessing multiple ai models” — Get a single Ailoot subscription for multiple model families. Work with GPT, Gemini and Claude today and use new flagship models through the same Ailoot key from launch.&lt;/p&gt;
+&lt;p&gt;Move from comparison in Ailoot Arena to a project in Ailoot Code or Ailoot Cloud Agents. Team workspaces keep employee access and spending in one place.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue. With day-one access to new flagship models, you can keep using the same key when a new model arrives. Visit &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; for subscriptions and promo codes offering up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>Zapier vs n8n: What You Trade for Self-Hosting</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100286.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100286.md</guid>
