@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [LLM as a Judge: The Complete Guide](articles/guide-100299.md)
 - [Claude API for Beginners: A Practical Getting-Started Guide](articles/guide-100309.md)
 - [7 Approaches to Production AI Model Access](articles/guide-100293.md)
 - [Zapier vs n8n: Which Automation Tool Is Right for Your Team in 2026?](articles/guide-100290.md)
