@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [The LLM Inference Trilemma: Throughput, Latency, Cost](articles/guide-100288.md)
 - [What is an LLM router?](articles/guide-100287.md)
 - [Zapier vs n8n: What You Trade for Self-Hosting](articles/guide-100286.md)
 - [n8n vs Zapier: Features, Pricing Models, and Workflow Design](articles/guide-100283.md)
