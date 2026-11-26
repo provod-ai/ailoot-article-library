@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Everything You Need to Know About the Best TTS APIs](articles/guide-100313.md)
 - [Best-Value LLM Routing: Why the Future of Enterprise AI Is Not “Use the Best Model for Everything”](articles/guide-100311.md)
 - [LLM as a Judge: The Complete Guide](articles/guide-100299.md)
 - [Claude API for Beginners: A Practical Getting-Started Guide](articles/guide-100309.md)
