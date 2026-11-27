@@ -7,6 +7,55 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>LLM-as-a-Judge: Using AI to Evaluate AI (Reliably)</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100331.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100331.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/llm-as-a-judge-evaluating-ai-reliably/</dc:source>
+      <pubDate>Fri, 27 Nov 2026 19:26:32 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;LLM-as-a-Judge: Using AI to Evaluate AI (Reliably)&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How to use language models to evaluate AI outputs, account for judge bias, design rubrics, and calibrate automated scores against human judgments.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;An LLM judge applies a written rubric to another AI response. It can help teams review large sets of answers, but its verdicts must be checked against examples assessed by people.&lt;/p&gt;
+&lt;h2&gt;Start with a task and a rubric&lt;/h2&gt;
+&lt;p&gt;Choose one task, such as answering support questions from a supplied policy. Describe the expected behavior in observable terms. For example, check whether an answer follows the policy, addresses the question and avoids unsupported claims. A rubric should also say what to do when the evidence is missing.&lt;/p&gt;
+&lt;p&gt;Use separate criteria before producing an overall result. A response may be concise but inaccurate; a single score can hide that distinction. Keep the rubric and the judge model version alongside the results so that later comparisons have context.&lt;/p&gt;
+&lt;h2&gt;Choose a way to compare&lt;/h2&gt;
+&lt;p&gt;For a pass/fail check, give the judge the question, the available evidence and one response. Ask for a decision on each criterion and a short explanation grounded in the supplied material. This works best when the criteria are specific enough for reviewers to apply consistently.&lt;/p&gt;
+&lt;p&gt;For a comparison, give the judge two responses to the same question and ask which better meets the rubric, allowing a tie. Run the comparison again with their order reversed. If the winner changes, flag the item for review rather than treating either result as settled. Remove unnecessary labels that reveal which system produced an answer.&lt;/p&gt;
+&lt;p&gt;A reference answer can help on a question with a known answer. For open-ended tasks, treat a reference as an example of acceptable quality, not as the only valid wording.&lt;/p&gt;
+&lt;h2&gt;Make results usable&lt;/h2&gt;
+&lt;p&gt;Request a structured result with a decision and a short reason for each criterion. For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{&amp;quot;policy_supported&amp;quot;:{&amp;quot;result&amp;quot;:&amp;quot;pass&amp;quot;,&amp;quot;reason&amp;quot;:&amp;quot;The answer cites the supplied cancellation rule.&amp;quot;},&amp;quot;addresses_question&amp;quot;:{&amp;quot;result&amp;quot;:&amp;quot;fail&amp;quot;,&amp;quot;reason&amp;quot;:&amp;quot;It does not say how to cancel.&amp;quot;}}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is an illustration of a possible response, not evidence that a judge checked a real case. Validate the output before using it in a report; retry or send malformed results for review according to your workflow. A model&amp;#x27;s explanation is itself an output to inspect, not proof that its verdict is correct.&lt;/p&gt;
+&lt;h2&gt;Calibrate with people&lt;/h2&gt;
+&lt;p&gt;Build a representative sample that includes straightforward cases, edge cases and known failures. Have reviewers apply the same rubric independently to an overlapping subset, discuss disagreements and record the decisions. Then compare the judge&amp;#x27;s results with those human labels, inspect where it disagrees and revise the rubric or workflow before relying on the metric.&lt;/p&gt;
+&lt;p&gt;Pay special attention to order, length and style. A polished or longer answer is not necessarily more accurate. Include concise correct answers and plausible incorrect ones in the sample. For pairwise tests, measure how often swapping the order changes the decision.&lt;/p&gt;
+&lt;h2&gt;Use the judge as one layer&lt;/h2&gt;
+&lt;p&gt;Run deterministic checks first when they fit: for example, validate JSON or check a required field. Use the judge for criteria that require interpretation, and retain human review for uncertain or consequential cases. Track aggregate results on a stable dataset, but inspect individual failures too.&lt;/p&gt;
+&lt;p&gt;Recheck calibration when the model, rubric, task or input distribution changes. A higher score by itself does not establish an improvement: examine the responses and keep a separate evaluation set when the same automated metric is used to optimize a system.&lt;/p&gt;
+&lt;h2&gt;Practical checklist&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Define the task, available evidence and criteria.&lt;/li&gt;
+&lt;li&gt;Collect examples and agree on human labels.&lt;/li&gt;
+&lt;li&gt;Select single-response or pairwise evaluation and specify a tie or uncertainty outcome.&lt;/li&gt;
+&lt;li&gt;Validate structured results and review disagreements.&lt;/li&gt;
+&lt;li&gt;Track versions and recalibrate after material changes.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For further guidance, see &lt;a href="https://platform.openai.com/docs/guides/evaluation-best-practices"&gt;OpenAI&amp;#x27;s evaluation best practices&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/llm-as-a-judge-evaluating-ai-reliably/"&gt;LLM-as-a-Judge: Using AI to Evaluate AI (Reliably)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Discover &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt;. One Ailoot-issued API key gives you 1,284 models and variants across 15 categories. That catalogue puts Ailoot among the world’s largest AI routers by model count. Choose Claude or Qwen for code, FLUX for images, Kling for video, Scribe for transcription, Lyria for music and Tripo3D for 3D assets. BGE embeddings support semantic search.&lt;/p&gt;
+&lt;p&gt;Compare GPT, Claude and Gemini for your application’s tasks using one &lt;a href="https://ailoot.ai/"&gt;Ailoot API key&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Ailoot lets you compare models within one subscription. Ailoot Arena offers model comparison, evaluation reports and history.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue. With day-one access to new flagship models, you can keep using the same key when a new model arrives. Visit &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; for subscriptions and promo codes offering up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>Gemini API tooling updates: context circulation, tool combos and Maps grounding for Gemini 3</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100329.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100329.md</guid>
