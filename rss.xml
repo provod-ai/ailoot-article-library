@@ -7,6 +7,42 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Gemini API tooling updates: context circulation, tool combos and Maps grounding for Gemini 3</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100329.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100329.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/gemini-api-tooling-updates-context-circulation-maps-grounding/</dc:source>
+      <pubDate>Fri, 27 Nov 2026 17:20:32 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;Gemini API tooling updates: context circulation, tool combos and Maps grounding for Gemini 3&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Developers can combine function calling with built-in tools such as Google Search in a single Gemini API call, circulate context across tool calls and turns, and use Grounding with Google Maps with Gemini 3 models.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Mar 17, 2026&lt;/p&gt;
+&lt;p&gt;Google’s &lt;a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tooling-updates/"&gt;March 17, 2026 announcement&lt;/a&gt; described three changes to Gemini API workflows: combining built-in and application-defined tools, carrying tool context between steps, and adding Google Maps grounding to Gemini 3. The practical value is less glue code around a model’s tool choices; your application still owns execution, permissions, and validation.&lt;/p&gt;
+&lt;h2&gt;New tooling capabilities in the API&lt;/h2&gt;
+&lt;p&gt;Google’s current documentation marks built-in/custom tool combination as a preview feature and lists the eligible Gemini models. Check the documentation before relying on it in production.
+See the &lt;a href="https://ai.google.dev/gemini-api/docs/tool-combination"&gt;official tool-combination guide&lt;/a&gt; for supported models, endpoints, and examples.&lt;/p&gt;
+&lt;h3&gt;Combine built-in and custom tools in the same interaction&lt;/h3&gt;
+&lt;p&gt;A request can offer Gemini a built-in tool such as Google Search alongside a function that your application exposes. The model can select a useful sequence, for example searching public information and then asking your service to check an internal record. Your code must still run that function, validate its arguments, enforce access rules, and return the result. This can reduce application-side orchestration steps; it does not guarantee a faster response or remove the need for control flow.&lt;/p&gt;
+&lt;h3&gt;Cross-tool context circulation for built-in tools&lt;/h3&gt;
+&lt;p&gt;In a multi-step exchange, later steps can use the earlier tool call and response kept in the interaction context. That avoids manually restating every result when a built-in tool informs a later action. Treat the retained context as conversation state: keep the interaction chain intact and decide what data is appropriate to send to each tool.&lt;/p&gt;
+&lt;h3&gt;Tool response IDs&lt;/h3&gt;
+&lt;p&gt;An Interactions API &lt;code&gt;function_call&lt;/code&gt; step carries the call’s &lt;code&gt;id&lt;/code&gt;. To return the result, send a &lt;code&gt;function_result&lt;/code&gt; with &lt;code&gt;call_id&lt;/code&gt; set to that same value; the field name changes on the response. This pairing ties the result to its request, including when calls run in parallel. See Google’s &lt;a href="https://ai.google.dev/gemini-api/docs/function-calling"&gt;function-calling documentation&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Expanded built-in tooling support&lt;/h2&gt;
+&lt;p&gt;Tool combination and context handling are also documented for the broader API workflow. Google’s announcement says these capabilities are supported in generateContent as well; it recommends the &lt;a href="https://ai.google.dev/gemini-api/docs/interactions"&gt;Interactions API&lt;/a&gt; when server-managed state and unified reasoning traces are useful. Check the current model and tool support before choosing an endpoint.&lt;/p&gt;
+&lt;h3&gt;Grounding with Google Maps for the Gemini 3 family&lt;/h3&gt;
+&lt;p&gt;The announcement added Google Maps as a built-in option for Gemini 3. A location-aware request can draw on place details and local business information, which is useful for discovery tasks such as finding nearby services. Make the geographic scope explicit and verify the returned places and details before presenting them as current facts; grounding supplies context, not a guarantee that every result is complete or suitable. See the &lt;a href="https://ai.google.dev/gemini-api/docs/maps-grounding"&gt;Maps grounding guide&lt;/a&gt; and its official examples.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/gemini-api-tooling-updates-context-circulation-maps-grounding/"&gt;Gemini API tooling updates: context circulation, tool combos and Maps grounding for Gemini 3&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With 1,284 models and variants across 15 categories, Ailoot is one of the world’s largest AI routers by model count. Explore &lt;a href="https://ailoot.ai/"&gt;the Ailoot alternative to a Gemini API key&lt;/a&gt; with a key issued by Ailoot. Build with Claude, DeepSeek or Kimi alongside FLUX for images, Kling for video, Eleven v4 for speech, Lyria for music and Tripo3D for 3D. Ailoot also supports semantic search and structured decisions.&lt;/p&gt;
+&lt;p&gt;Create an Ailoot-issued key for your “&lt;a href="https://ailoot.ai/"&gt;gemini api key&lt;/a&gt;” project and use Gemini 4 Carbon or Gemini 4 Hydrogen through the Ailoot API. The same balance also covers GPT, Claude and media models.&lt;/p&gt;
+&lt;p&gt;Bring your “gemini api keys” and “gemini apikey” projects to Ailoot alongside your other model workflows. Create a separate key for each project in Ailoot and configure its limits. Keep team access and company spending together in the Ailoot workspace.&lt;/p&gt;
+&lt;p&gt;New flagship models are available on Ailoot at launch. One subscription covers the full catalogue, and subscriptions and promo codes can save up to 50% on official provider API prices. Find your current offers at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>What Are Small Language Models? Where the Sub-10B Tier Earns Its Keep and Where It Breaks</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100327.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100327.md</guid>

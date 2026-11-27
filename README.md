@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Gemini API tooling updates: context circulation, tool combos and Maps grounding for Gemini 3](articles/guide-100329.md)
 - [What Are Small Language Models? Where the Sub-10B Tier Earns Its Keep and Where It Breaks](articles/guide-100327.md)
 - [What is an LLM router?](articles/guide-100326.md)
 - [When a small model beats a giant.](articles/guide-100324.md)
