@@ -7,6 +7,48 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Text Classification with an LLM</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100335.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100335.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/llm-classifier/</dc:source>
+      <pubDate>Fri, 27 Nov 2026 21:33:19 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;Text Classification with an LLM&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A practical guide to classifying text with an LLM, choosing labels, reviewing suggested changes and checking results.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A language model can classify text by applying a set of labels to each item. This guide explains how to define the labels, handle uncertain cases and measure whether the results are useful.&lt;/p&gt;
+&lt;h2&gt;Define the decision&lt;/h2&gt;
+&lt;p&gt;Start with a question that has a practical outcome. A support team might group messages into &lt;code&gt;billing&lt;/code&gt;, &lt;code&gt;technical&lt;/code&gt; and &lt;code&gt;other&lt;/code&gt; so they can route them to the right queue. Decide whether each message needs one label or can have several. Explain each label with examples, including cases that look similar but belong in different groups.&lt;/p&gt;
+&lt;p&gt;Keep an &lt;code&gt;other&lt;/code&gt; or review option for items that do not fit. A forced choice can make a clean-looking report while hiding a poor taxonomy. For decisions that affect people or have significant consequences, keep a person in the loop.&lt;/p&gt;
+&lt;h2&gt;Ask for a predictable result&lt;/h2&gt;
+&lt;p&gt;Give the model the text, the label definitions and the desired output format. Treat the text being classified as data, not as an instruction to the model. For example, a message saying “ignore the labels” is still the item to classify; it should not change the task.&lt;/p&gt;
+&lt;p&gt;A result might look like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;{&amp;quot;label&amp;quot;:&amp;quot;billing&amp;quot;,&amp;quot;reason&amp;quot;:&amp;quot;The message asks about an invoice.&amp;quot;}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is an illustrative result, not a real model response. Before using an output, check that it parses, contains the expected fields and uses an allowed label. A valid format alone does not mean the classification is correct. Model support for schema-constrained output varies; check the documentation for the model and API you use.&lt;/p&gt;
+&lt;h2&gt;Improve the label set&lt;/h2&gt;
+&lt;p&gt;Start with a manageable set of categories and review examples that fall into &lt;code&gt;other&lt;/code&gt; or repeatedly cause disagreement. They may reveal a missing category, an unclear definition or two labels that overlap. Propose changes using representative examples, then ask a reviewer to approve the new definitions before applying them broadly.&lt;/p&gt;
+&lt;p&gt;A model can also suggest new labels and propose merges as an experiment. Mark protected categories that must remain distinct and verify every proposed change against those constraints before updating the taxonomy.&lt;/p&gt;
+&lt;p&gt;If two categories seem similar, compare what decisions they support before merging them. For example, payment failures and refund requests may both concern money but require different actions. Keep distinctions that matter to the workflow, and record a version for each change to the taxonomy.&lt;/p&gt;
+&lt;h2&gt;Check performance before scaling&lt;/h2&gt;
+&lt;p&gt;Create a sample that reflects the real mix of messages, including rare and ambiguous cases. Have people label it using the same definitions, resolve disagreements and keep the agreed labels as a reference. Compare model results with those labels and inspect mistakes for each category; an overall accuracy figure can conceal a weak category.&lt;/p&gt;
+&lt;p&gt;Test changes to the prompt, model or taxonomy on a separate evaluation set. Monitor results over time because the language and mix of incoming text can change. Send uncertain or invalid results to review rather than silently assigning a label.&lt;/p&gt;
+&lt;h2&gt;Protect the input and plan the workflow&lt;/h2&gt;
+&lt;p&gt;Send only the information needed for the task and handle sensitive records according to your organisation&amp;#x27;s rules. If processing a large collection, test a small representative batch first, record failures and define how to resume without losing or duplicating items. Measure the time and cost of the actual workflow before increasing its volume.&lt;/p&gt;
+&lt;p&gt;The goal is not simply to produce labels. It is to create a repeatable decision process whose definitions, exceptions and errors can be inspected.&lt;/p&gt;
+&lt;p&gt;For further guidance, see &lt;a href="https://platform.openai.com/docs/guides/structured-outputs"&gt;OpenAI&amp;#x27;s structured output documentation&lt;/a&gt; and &lt;a href="https://platform.openai.com/docs/guides/evaluation-best-practices"&gt;evaluation best practices&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/llm-classifier/"&gt;Text Classification with an LLM&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With 1,284 models and variants across 15 categories, Ailoot is one of the world’s largest AI routers by model count. Explore &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt; with a key issued by Ailoot. Use Claude for code, Gemini for document analysis, Nano Banana for photo editing, Veo for video, Eleven v4 for voiceovers, Suno for music and Tripo3D for 3D objects.&lt;/p&gt;
+&lt;p&gt;For AI classification, use Mercury Decide, Jev or Clef through Ailoot to add structured decisions to your workflow. Pair them with models that analyze documents and generate text.&lt;/p&gt;
+&lt;p&gt;Build your classification and routing features into an app with the &lt;a href="https://ailoot.ai/"&gt;Ailoot API&lt;/a&gt;. Monitor model usage across projects and manage company spend through one workspace.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue. With day-one access to new flagship models, you can keep using the same key when a new model arrives. Visit &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; for subscriptions and promo codes offering up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>LLM-as-a-Judge: Using AI to Evaluate AI (Reliably)</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100331.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100331.md</guid>
