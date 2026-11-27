@@ -7,6 +7,51 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>What is an LLM router?</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100326.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100326.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/what-is-an-llm-router-and-do-you-need-one/</dc:source>
+      <pubDate>Fri, 27 Nov 2026 09:31:26 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;What is an LLM router?&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Understand model routing, router components, build-versus-adopt tradeoffs, and when a router may be unnecessary.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;What is an LLM router — and do you actually need one?&lt;/h2&gt;
+&lt;p&gt;An LLM router sits between an application and its model endpoints. For each inference request it can choose the model, the provider serving that model, or both. Its policy defines when to try a different endpoint after a failure.&lt;/p&gt;
+&lt;p&gt;The term is having a moment, which means it&amp;#x27;s being stretched to cover things it shouldn&amp;#x27;t. Before you evaluate any router, or build one, it&amp;#x27;s worth being precise about what&amp;#x27;s actually in the box.&lt;/p&gt;
+&lt;h2&gt;Two different things wear the same name&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;Model routing&lt;/strong&gt; selects the model for an inference request. A smaller model may be enough for routine classification, while a harder synthesis task may need a more capable model. &lt;strong&gt;Provider routing&lt;/strong&gt; can keep the selected model and switch to another compatible endpoint if one provider is temporarily overloaded.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Tool-call routing&lt;/strong&gt; selects the service that executes a tool call after the agent has chosen the tool. For a web search, it can start with a local index and try another search API if it needs broader coverage. The providers in the chain perform the same tool action.&lt;/p&gt;
+&lt;p&gt;In both cases, the routing policy orders targets that can meet the request&amp;#x27;s requirements. Model quality can be hard to judge in advance. Some tool outputs are easier to check, such as whether extraction returned an article body. A search result can contain hits and still miss what the user asked for.&lt;/p&gt;
+&lt;p&gt;This post covers both, because the anatomy is shared.&lt;/p&gt;
+&lt;h2&gt;What&amp;#x27;s actually inside an LLM router&lt;/h2&gt;
+&lt;p&gt;Strip the marketing and a router has four components. If a product can&amp;#x27;t show you all four, it&amp;#x27;s a proxy with opinions.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Policy.&lt;/strong&gt; First filter for the capabilities the request requires. Then order eligible targets by criteria such as expected quality, price or latency. A fixed priority list can be enough. A classifier that picks the model tier adds work of its own, so measure what it improves.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Health signals.&lt;/strong&gt; Track error rates, timeouts and latency percentiles per endpoint. Set a timeout for each attempt so a single call can move on when an endpoint never answers. Use trends across requests to decide whether to temporarily skip a degraded endpoint.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Fallback rules.&lt;/strong&gt; Define which failures allow another attempt, such as a temporary overload or a timeout when repeating the request is safe. Decide separately what to do when a search returns HTTP 200 with zero results. Limit the number of attempts and the total time. A client timeout leaves the outcome and any charge uncertain.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Accounting.&lt;/strong&gt; Record the model and service that answered, the latency, and any usage and charges that are available. Record every attempt under the same logical request, including failed ones. Track estimated cost separately from confirmed charges so you can compare the cost of the whole chain.&lt;/p&gt;
+&lt;h2&gt;Build or adopt?&lt;/h2&gt;
+&lt;p&gt;A simple router can start with a list of eligible targets, a timeout per attempt, a total deadline, fallback rules and an attempt log. Keep the policy in your application as long as that covers your workload.&lt;/p&gt;
+&lt;p&gt;Adopt when you want the parts that are tedious to build and maintain: provider integrations that track API churn, health tracking with sane defaults, cost tables that stay current, transport plumbing. An MCP server can expose a tool through one interface and choose the provider behind it.&lt;/p&gt;
+&lt;p&gt;Check whether you can control provider credentials, export usage records and change endpoints without rewriting calls. Compare the costs of running your own router and using a hosted one, including any fees the router charges.&lt;/p&gt;
+&lt;h2&gt;When a router is overkill&lt;/h2&gt;
+&lt;p&gt;Honest section, because the answer to the title question is sometimes no.&lt;/p&gt;
+&lt;p&gt;A router is often unnecessary when one model from one provider serves a low-volume, non-critical path. As an example, with a $40 monthly bill, compare the plausible savings with the cost of engineering and maintenance.&lt;/p&gt;
+&lt;p&gt;A small integration may need one backup provider. Handle a specific temporary error and try that compatible provider within the deadline if repeating the request is safe.&lt;/p&gt;
+&lt;p&gt;Consider centralizing the rules if several providers serve the same workload, outages have affected users, measured costs justify the work, or routing logic is scattered across the application. A shared policy gives you one place to maintain and test those decisions.&lt;/p&gt;
+&lt;p&gt;Start by listing which targets are eligible, in what order to try them and which outcomes allow another attempt. A fixed list can be enough at first. Add a backup when the workload needs one.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/what-is-an-llm-router-and-do-you-need-one/"&gt;What is an LLM router?&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With 1,284 models and variants across 15 categories, Ailoot is one of the world’s largest AI routers by model count. Explore &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt; with a key issued by Ailoot. The catalogue covers text with GPT or Claude, images with FLUX, video with Kling, voice with Eleven v4, music with Suno, 3D assets with Tripo3D and ranking with Cohere Rerank.&lt;/p&gt;
+&lt;p&gt;“unified llm api” — Give your product access to leading text, code and media models through the &lt;a href="https://ailoot.ai/"&gt;Ailoot API&lt;/a&gt;. Put reasoning with Claude, image generation with FLUX and video with Kling into one workflow.&lt;/p&gt;
+&lt;p&gt;A commercial licence from Ailoot covers your own paid software. Give projects their own keys and manage company usage from an Ailoot workspace.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue. With day-one access to new flagship models, you can keep using the same key when a new model arrives. Visit &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; for subscriptions and promo codes offering up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>When a small model beats a giant.</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100324.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100324.md</guid>

@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [What is an LLM router?](articles/guide-100326.md)
 - [When a small model beats a giant.](articles/guide-100324.md)
 - [n8n vs Zapier: Pricing, Integrations, and When to Choose Each](articles/guide-100318.md)
 - [Best Local LLM for Coding in 2026: A Comprehensive Guide](articles/guide-100317.md)
