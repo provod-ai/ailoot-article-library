@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Introducing Managed Agents in the Gemini API](articles/guide-100336.md)
 - [Text Classification with an LLM](articles/guide-100335.md)
 - [LLM-as-a-Judge: Using AI to Evaluate AI (Reliably)](articles/guide-100331.md)
 - [Gemini API tooling updates: context circulation, tool combos and Maps grounding for Gemini 3](articles/guide-100329.md)
