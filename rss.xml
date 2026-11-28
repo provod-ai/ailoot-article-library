@@ -7,6 +7,70 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>How an inference platform fits together</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100347.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100347.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/how-an-inference-platform-fits-together/</dc:source>
+      <pubDate>Sat, 28 Nov 2026 15:50:50 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;How an inference platform fits together&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How gateways, routing, caching, and model serving interact, and how request context can carry through those layers.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;MAR 08, 2026 | Engineering | 4 min read&lt;/p&gt;
+&lt;p&gt;How gateways, routing, caching, and model serving interact, and how request context can carry through those layers.&lt;/p&gt;
+&lt;p&gt;A request context can travel through a gateway and router into model serving. That context ties model choice, cache reuse, and execution to the caller&amp;#x27;s identity and the cost of each attempt. A router that ignores cache state can spend the savings its neighboring layer made.&lt;/p&gt;
+&lt;p&gt;Sharing context costs integration work, and a router that reads cache state is harder to swap. Sending context with the request while keeping the products separate lets a team use a gateway and router on another provider&amp;#x27;s runtime. The router then makes decisions with the information that provider exposes.&lt;/p&gt;
+&lt;figure&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Gateway&lt;/strong&gt; — The application contract&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Route + cache&lt;/strong&gt; — Choose and reuse work&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Model serving&lt;/strong&gt; — Execute the model&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Application&lt;/strong&gt; — Validate and use the result&lt;/li&gt;
+&lt;/ol&gt;
+Trace the request · Evaluate its outcome · Improve the cause
+&lt;figcaption&gt;One request · shared context · The endpoint is one part of the system.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;h2&gt;A cheaper route can cost more&lt;/h2&gt;
+&lt;p&gt;Consider an illustrative document-extraction service with long fixed instructions and a short document on each request. Prefix caching and routing both look attractive, and each can undercut the other. A cached prefix is key-value state computed by one model, so a request routed to another model reads the instructions from scratch.&lt;/p&gt;
+&lt;p&gt;Anthropic&amp;#x27;s published five-minute cache pricing is 1.25 times base input for a write and 0.1 times for a read, with per-model exceptions (&lt;a href="https://www.anthropic.com/news/prompt-caching"&gt;announcement&lt;/a&gt;, &lt;a href="https://platform.claude.com/docs/en/build-with-claude/prompt-caching"&gt;documentation&lt;/a&gt;). Against that warm cache, an uncached alternative has to charge less than a tenth of the incumbent&amp;#x27;s input price to win on the shared prefix. One write and one hit cost 1.35 input passes on the cached portion, against two without caching. A write that no later request reads costs 1.25.&lt;/p&gt;
+&lt;p&gt;A router comparing list prices might see a model at half the input price and switch, paying at least five times as much for the prefix. Declared routing states which models may substitute; shared context shows what each substitution cost.&lt;/p&gt;
+&lt;h2&gt;Answer reuse needs the caller&amp;#x27;s identity&lt;/h2&gt;
+&lt;figure&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Exact response&lt;/strong&gt; — Reuse an answer for a matching request&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prefix&lt;/strong&gt; — Reuse input computation, generate a new answer&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Semantic&lt;/strong&gt; — Decide when different requests are equivalent&lt;/li&gt;
+&lt;/ol&gt;
+Reuse must respect the model, prompt, schema, and freshness requirements.
+&lt;figcaption&gt;Three different kinds of reuse · An answer cache is not a prefix cache.&lt;/figcaption&gt;
+&lt;/figure&gt;
+&lt;p&gt;An answer cache returns a stored output; a semantic cache also decides when two different requests deserve the same one. &lt;a href="https://github.com/zilliztech/GPTCache"&gt;GPTCache&lt;/a&gt; decides hits by embedding similarity, and its README warns of “false positives during cache hits.”&lt;/p&gt;
+&lt;p&gt;In extraction, a false positive could return a wrong account number: two invoices from one vendor template can sit close in embedding space, and the cache may hand the second invoice the first one&amp;#x27;s account. A semantic cache without application identity can create a correctness bug, while its hit-rate dashboard counts each wrong answer as a saving.&lt;/p&gt;
+&lt;p&gt;Anthropic isolates prompt caches between organizations, and per workspace on its own API, though a prefix cache hands back no stored answer. An answer cache needs at least that boundary. An application can declare whether a task tolerates reuse across similar inputs, and reuse can key on the caller, the data that caller may read, and the task version.&lt;/p&gt;
+&lt;p&gt;Extraction can use exact-match reuse or none, with an unknown key triggering recomputation. That rule lowers hit rates and pays for work a looser cache would skip. The default may be too strict: across a large public FAQ, recomputing on unknown keys may cost more than the rare wrong answer it prevents.&lt;/p&gt;
+&lt;h2&gt;Follow the failure before choosing the fix&lt;/h2&gt;
+&lt;p&gt;Suppose a cheaper model returns invalid fields and a larger model repairs them, increasing that document&amp;#x27;s bill and delay. Cost can be counted per correct extraction at the required latency; the first call&amp;#x27;s token price is one input.&lt;/p&gt;
+&lt;p&gt;Berkeley&amp;#x27;s compound AI systems analysis argues for optimizing interacting components together. A trace has to separate a model failure from stale reuse, a slow tool, or a bad route, since each points to a fix in a different layer. Control over execution can help identify where costs arise, while a faster runtime may shift waste into the decisions around it. Connecting traces to evaluation on production traffic can test whether a change improves the task, including the recovery path.&lt;/p&gt;
+&lt;p&gt;An operator can use that trace to change the layer that failed. Keeping request history, evaluation cases, and deployment choice within the customer&amp;#x27;s application lets improvements build on that application&amp;#x27;s own experience.&lt;/p&gt;
+&lt;h2&gt;Related topics&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;guide&lt;/li&gt;
+&lt;li&gt;platform&lt;/li&gt;
+&lt;li&gt;inference&lt;/li&gt;
+&lt;li&gt;ops&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/how-an-inference-platform-fits-together/"&gt;How an inference platform fits together&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;With 1,284 models and variants across 15 categories, Ailoot is one of the world’s largest AI routers by model count. Explore &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt; with a key issued by Ailoot. Choose Claude or Qwen for code, FLUX for images, Kling for video, Scribe for transcription, Lyria for music and Tripo3D for 3D assets. BGE embeddings support semantic search.&lt;/p&gt;
+&lt;p&gt;Give your product access to leading text, code and media models through the &lt;a href="https://ailoot.ai/"&gt;Ailoot API&lt;/a&gt;. Put reasoning with Claude, image generation with FLUX and video with Kling into one workflow.&lt;/p&gt;
+&lt;p&gt;A commercial licence from Ailoot covers your own paid software. Give projects their own keys and manage company usage from an Ailoot workspace.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue. With day-one access to new flagship models, you can keep using the same key when a new model arrives. Visit &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; for subscriptions and promo codes offering up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>TTS API Architecture: From Text to Production Audio</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100346.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100346.md</guid>
