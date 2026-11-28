@@ -7,6 +7,44 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Gemini: Choosing Between the App and the API</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100339.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100339.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/gemini-news-and-updates/</dc:source>
+      <pubDate>Sat, 28 Nov 2026 03:29:16 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;Gemini: Choosing Between the App and the API&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A practical guide to choosing between the Gemini app and API, evaluating models and estimating usage costs.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Gemini can be used through Google&amp;#x27;s consumer app or integrated into software through an API. The right starting point depends on whether you want to complete a task yourself or build a repeatable workflow for other people.&lt;/p&gt;
+&lt;h2&gt;Start with the job&lt;/h2&gt;
+&lt;p&gt;For a one-off task, such as drafting a message or exploring an idea, an interactive app gives you a place to ask a question and refine the answer. Check the result before relying on it: a fluent answer may still contain an error, omit context or cite a source incorrectly.&lt;/p&gt;
+&lt;p&gt;An API is useful when an application needs to send inputs and process outputs as part of a workflow. For example, a support application might summarise a ticket for a human reviewer. The developer must handle instructions, data access, failures and the way results are displayed or stored.&lt;/p&gt;
+&lt;p&gt;The app and API are different products. Do not assume a feature, limit, subscription or data setting in one is automatically available in the other. Check the documentation and the settings for the product and account you actually use.&lt;/p&gt;
+&lt;h2&gt;Choose a model for the task&lt;/h2&gt;
+&lt;p&gt;Start with a few representative examples rather than choosing a model by name alone. For a summarisation task, include a short message, a long message and a case with missing information. Decide what a good answer must preserve, what it must not invent and how long it should be.&lt;/p&gt;
+&lt;p&gt;If a task involves images, audio or other input, check that the specific model and endpoint support the format you need. Supported modalities, context limits and availability can differ by model and can change. Google&amp;#x27;s &lt;a href="https://ai.google.dev/gemini-api/docs"&gt;Gemini API documentation&lt;/a&gt; is the place to check current options and request formats.&lt;/p&gt;
+&lt;h2&gt;Estimate cost with a realistic sample&lt;/h2&gt;
+&lt;p&gt;For an API workflow, record the amount of input and output used by a small representative set of requests. Multiply the measured usage by the relevant published prices, accounting for every applicable input and output type. Then estimate how often the workflow will run and leave room for retries and variation in response length.&lt;/p&gt;
+&lt;p&gt;Treat the result as an estimate, not a guaranteed bill. Check the current &lt;a href="https://ai.google.dev/gemini-api/docs/pricing"&gt;Gemini API pricing&lt;/a&gt;, quotas and billing settings for your account. An app subscription and API usage may have different terms.&lt;/p&gt;
+&lt;h2&gt;Evaluate before scaling&lt;/h2&gt;
+&lt;p&gt;Compare results with examples reviewed by people. For each response, check the facts against the input, the requested format and any task-specific rules. Include difficult cases and cases the model should decline or send to a person. A valid-looking response is not necessarily a correct one.&lt;/p&gt;
+&lt;p&gt;Track failures and revise one part of the workflow at a time: the instructions, input preparation, model or output validation. Repeat the same test set after a change. If the model or the kind of incoming data changes, reassess the result rather than assuming the previous evaluation still applies.&lt;/p&gt;
+&lt;h2&gt;Handle data and failures deliberately&lt;/h2&gt;
+&lt;p&gt;Send only the data needed for the task and review the relevant product&amp;#x27;s data-handling settings before using sensitive information. Validate outputs before an application acts on them. Plan for rate limits, timeouts and incomplete results; show an actionable error or route the case for review instead of silently treating a failure as a completed task.&lt;/p&gt;
+&lt;p&gt;For requests that can trigger external actions, keep a record of the operation and check its status before retrying. A response lost in transit does not prove that an action failed.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/gemini-news-and-updates/"&gt;Gemini: Choosing Between the App and the API&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Discover &lt;a href="https://ailoot.ai/"&gt;Gemini API access through Ailoot&lt;/a&gt;. Ailoot issues its own API key for 1,284 models and variants across 15 categories. It is one of the world’s largest AI routers by model count. Choose Claude or Qwen for code, FLUX for images, Kling for video, Scribe for transcription, Lyria for music and Tripo3D for 3D assets. BGE embeddings support semantic search.&lt;/p&gt;
+&lt;p&gt;Explore &lt;a href="https://ailoot.ai/"&gt;Gemini API models&lt;/a&gt; with Ailoot. Put Gemini 4 Hydrogen or Gemini 4 Argon to work on reasoning, code and documents. The same account also gives you Nano Banana 2.1 for images and Veo 3.1 for video.&lt;/p&gt;
+&lt;p&gt;Ailoot Arena gives your team a place to compare Gemini with other leading models.&lt;/p&gt;
+&lt;p&gt;One subscription covers the full Ailoot catalogue. With day-one access to new flagship models, you can keep using the same key when a new model arrives. Visit &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt; for subscriptions and promo codes offering up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>Designing Tools for AI Agents: Lessons for Claude Code Workflows</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100338.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100338.md</guid>
