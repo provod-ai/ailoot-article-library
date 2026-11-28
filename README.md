@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Securing Model Routing: When the Cheapest Path Picks the Guardrail](articles/guide-100345.md)
 - [How to Test an LLM Judge for Bias](articles/guide-100344.md)
 - [Using LLM Features in a Text Classification Pipeline](articles/guide-100343.md)
 - [How to Measure Errors in an LLM Judge](articles/guide-100341.md)
