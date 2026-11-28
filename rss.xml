@@ -7,6 +7,46 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Designing Tools for AI Agents: Lessons for Claude Code Workflows</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100338.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100338.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/seeing-like-agent-tools-claude-code/</dc:source>
+      <pubDate>Sat, 28 Nov 2026 01:35:06 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;Designing Tools for AI Agents: Lessons for Claude Code Workflows&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A practical guide to defining and testing tools for AI agents, with examples for coding workflows.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;An AI agent needs more than a good model: it needs tools it can select, understand and use within the boundaries of a task. This guide shows how to design those interfaces, using coding workflows as a practical example.&lt;/p&gt;
+&lt;h2&gt;Start with an observable job&lt;/h2&gt;
+&lt;p&gt;Describe what the agent should accomplish before deciding which tools to expose. For a repository question, the job might be to find where a setting is read and cite the relevant files. An appropriate tool set could let the agent list files, search text and read selected files; it does not need permission to deploy anything to answer that question.&lt;/p&gt;
+&lt;p&gt;Write down the expected result and the actions that are out of scope. A tool is useful when its input and output help the agent make the next decision, and when the application can check that the action is permitted.&lt;/p&gt;
+&lt;h2&gt;Give each tool a clear contract&lt;/h2&gt;
+&lt;p&gt;A tool description should state what it does, the required inputs and the shape of its result. Use distinct names and parameter descriptions when tools have similar purposes. If an operation has a meaningful limit, describe it: for example, a search tool might return a bounded list of matching paths rather than every file&amp;#x27;s contents.&lt;/p&gt;
+&lt;p&gt;For a text-search tool, an illustrative request could contain a query and a directory. Its result could include paths and matching line numbers. The application should validate the directory and handle missing paths or failed searches explicitly. A well-formed request is not proof that the answer found is correct.&lt;/p&gt;
+&lt;h2&gt;Balance flexibility and control&lt;/h2&gt;
+&lt;p&gt;A general-purpose shell can support many tasks, but it also exposes a broad set of actions. A narrower tool can make a common operation easier to understand and constrain the action it performs. The right choice depends on the task, the environment and the permissions available; more tools do not automatically produce better results.&lt;/p&gt;
+&lt;p&gt;Keep the initial set small enough to navigate. Add a specialised tool when observed failures or repeated work justify it. If a tool can change data or contact an external service, make that effect visible in its description and enforce the relevant permissions in the application.&lt;/p&gt;
+&lt;h2&gt;Ask for missing information at the right time&lt;/h2&gt;
+&lt;p&gt;An agent should not invent a missing decision. If a task genuinely depends on information it cannot find, a structured question can present the relevant choices and explain their consequences. If independent work is ready, the workflow can continue that work while waiting for the answer.&lt;/p&gt;
+&lt;p&gt;Keep questions specific. For example, if a report requires a date range that was not supplied, ask for the range rather than asking the user to restate the whole assignment. Do not use a question as a substitute for checking available context.&lt;/p&gt;
+&lt;h2&gt;Test the tool and the agent together&lt;/h2&gt;
+&lt;p&gt;Create a small set of representative tasks: ordinary requests, ambiguous inputs, unavailable files and attempts to use a tool outside its intended scope. Inspect which tool was chosen, the arguments passed, the returned result and the final answer. A successful API call can still return incomplete data, so check the answer against the underlying evidence.&lt;/p&gt;
+&lt;p&gt;Change one part of the interface at a time when diagnosing a recurring failure. Record the version of the tool description and repeat the relevant test. For actions with side effects, reconcile an uncertain result before retrying; a retry can repeat an action that already succeeded.&lt;/p&gt;
+&lt;h2&gt;Apply the ideas in a coding workflow&lt;/h2&gt;
+&lt;p&gt;Claude Code supports workflows that combine tools and reusable instructions. Consult the current &lt;a href="https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"&gt;Claude tool-use documentation&lt;/a&gt; for the API contract and the &lt;a href="https://code.claude.com/docs/en/skills"&gt;Claude Code skills documentation&lt;/a&gt; for how reusable instructions are organised. Availability and exact interfaces can change, so check the documentation for the version in use.&lt;/p&gt;
+&lt;p&gt;The same design questions apply across agent frameworks: what does the task require, what can the agent observe, what can each tool change, and how will you verify the result?&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/seeing-like-agent-tools-claude-code/"&gt;Designing Tools for AI Agents: Lessons for Claude Code Workflows&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Explore &lt;a href="https://ailoot.ai/"&gt;your Claude Code API setup with Ailoot&lt;/a&gt;. Ailoot issues one API key for 1,284 models and variants across 15 categories, making it one of the world’s largest AI routers by model count. Pair GPT-6.2 Astra or Qwen4 Max for code with Nano Banana for photos, Veo for video, Scribe for transcription, Suno for music and Tripo3D for 3D. The same API supports embeddings and reranking.&lt;/p&gt;
+&lt;p&gt;Build with Claude, GPT, Gemini and DeepSeek in &lt;a href="https://ailoot.ai/"&gt;Ailoot Code&lt;/a&gt;. Its agent workspace brings together files, commands, skills, tasks and history.&lt;/p&gt;
+&lt;p&gt;Connect Claude Code, Codex CLI or OpenCode to Ailoot with an Ailoot-issued key. One shared balance covers the models your team uses for development.&lt;/p&gt;
+&lt;p&gt;New flagship models are available on Ailoot at launch. One subscription covers the full catalogue, and subscriptions and promo codes can save up to 50% on official provider API prices. Find your current offers at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>Introducing Managed Agents in the Gemini API</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100336.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100336.md</guid>
