@@ -12,6 +12,7 @@ Practical guides to AI APIs, model routing, LLM evaluation and agent integration
 
 [Subscribe via RSS](https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml)
 
+- [Using LLM Features in a Text Classification Pipeline](articles/guide-100343.md)
 - [How to Measure Errors in an LLM Judge](articles/guide-100341.md)
 - [Gemini: Choosing Between the App and the API](articles/guide-100339.md)
 - [Designing Tools for AI Agents: Lessons for Claude Code Workflows](articles/guide-100338.md)

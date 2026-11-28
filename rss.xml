@@ -7,6 +7,43 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Using LLM Features in a Text Classification Pipeline</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100343.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100343.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/stop-using-llms-as-classifiers-use-them-as-feature-generators/</dc:source>
+      <pubDate>Sat, 28 Nov 2026 07:31:31 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;Using LLM Features in a Text Classification Pipeline&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A practical guide to using LLM-generated features in a classification pipeline and evaluating thresholds and calibration.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A language model can classify text directly, or produce signals that another model uses alongside other data. Neither approach is automatically better. The useful choice depends on the task, the available labels and the cost of mistakes.&lt;/p&gt;
+&lt;h2&gt;Start with a baseline&lt;/h2&gt;
+&lt;p&gt;Define the outcome and collect examples that reflect the decisions you need to make. For a support workflow, the task might be to identify tickets that need urgent human review. Agree on what counts as urgent, include ambiguous cases and record how people labelled them.&lt;/p&gt;
+&lt;p&gt;Test a simple baseline before adding complexity. It could be a rule, a model prompted to return a label, or a supervised classifier trained on existing labelled data. Compare approaches on the same held-out examples. A direct LLM classifier can be useful; it should not be rejected merely because another approach exists.&lt;/p&gt;
+&lt;h2&gt;Turn model outputs into features&lt;/h2&gt;
+&lt;p&gt;Instead of asking a language model for only a final decision, ask it to report a small set of task-specific signals. In the support example, those signals might indicate whether the message describes a service outage or a billing question. A downstream classifier can use those signals together with permitted structured fields, such as product category.&lt;/p&gt;
+&lt;p&gt;Define each signal precisely and validate the output format. A generated signal can be wrong or missing, and a downstream model can learn from those errors. Do not include information that would not be available when the real decision is made.&lt;/p&gt;
+&lt;h2&gt;Split the data before fitting&lt;/h2&gt;
+&lt;p&gt;Separate training data from validation and test data before selecting features or tuning thresholds. Where messages from the same customer or a later time period are related, choose a split that reflects how the system will be used. Otherwise, information from the test set can leak into training and make results look better than they are.&lt;/p&gt;
+&lt;p&gt;Fit the downstream model on the training set. Use validation data to choose features and a decision threshold, then evaluate the selected workflow on a separate test set. Check the entire pipeline, including failures to obtain or parse an LLM output; do not evaluate only successful calls.&lt;/p&gt;
+&lt;h2&gt;Choose a threshold for the consequences&lt;/h2&gt;
+&lt;p&gt;A classifier may produce a score or probability for each item. A threshold turns that value into an action, such as sending a ticket for review. Moving the threshold can change precision and recall, but the right trade-off depends on the cost of missed cases and unnecessary reviews.&lt;/p&gt;
+&lt;p&gt;If you intend to interpret scores as probabilities, evaluate their calibration on suitable held-out data. Fitting a logistic regression or asking a model for confidence does not guarantee calibrated probabilities. Compare calibration as well as classification metrics, and inspect performance for important groups and rare cases.&lt;/p&gt;
+&lt;h2&gt;Measure the full workflow&lt;/h2&gt;
+&lt;p&gt;Compare the baseline and the feature-based system on the same evaluation set. Record false positives, false negatives, latency, cost and the proportion of calls that failed or needed human review. A more complex workflow should earn its extra operational cost with a measurable benefit on the task.&lt;/p&gt;
+&lt;p&gt;Track the version of the prompt, model, features and threshold. Re-evaluate when they change or when incoming data shifts. For further guidance on creating and maintaining evaluations, see &lt;a href="https://platform.openai.com/docs/guides/evaluation-best-practices"&gt;OpenAI&amp;#x27;s evaluation best practices&lt;/a&gt;.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/stop-using-llms-as-classifiers-use-them-as-feature-generators/"&gt;Using LLM Features in a Text Classification Pipeline&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Discover &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt;. Ailoot issues its own API key for 1,284 models and variants across 15 categories. It is one of the world’s largest AI routers by model count. The same key covers GPT, Claude, Gemini, Grok, Qwen and DeepSeek, plus Nano Banana for photos, Veo for video, Eleven v4 for speech, Suno for music, Tripo3D for 3D and BGE for search.&lt;/p&gt;
+&lt;p&gt;For text classification workflows, use Mercury Decide, Jev or Clef through Ailoot to add structured decisions. Pair them with models that analyze documents and generate text.&lt;/p&gt;
+&lt;p&gt;Build your classification and routing features into an app with the &lt;a href="https://ailoot.ai/"&gt;Ailoot API&lt;/a&gt;. Monitor model usage across projects and manage company spend through one workspace.&lt;/p&gt;
+&lt;p&gt;New flagship models are available on Ailoot at launch. One subscription covers the full catalogue, and subscriptions and promo codes can save up to 50% on official provider API prices. Find your current offers at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>How to Measure Errors in an LLM Judge</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100341.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100341.md</guid>
