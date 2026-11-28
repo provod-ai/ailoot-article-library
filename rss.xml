@@ -7,6 +7,44 @@
     <language>en</language>
     <atom:link href="https://raw.githubusercontent.com/provod-ai/ailoot-article-library/refs/heads/published/rss.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>How to Measure Errors in an LLM Judge</title>
+      <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100341.md</link>
+      <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100341.md</guid>
+      <dc:source>https://ailoot.ai/blog/en/using-a-model-as-a-judge-and-when-to-trust-the-score/</dc:source>
+      <pubDate>Sat, 28 Nov 2026 05:35:38 GMT</pubDate>
+      <content:encoded>&lt;h1&gt;How to Measure Errors in an LLM Judge&lt;/h1&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A practical guide to measuring false passes, false fails and stability in an LLM judge against human-reviewed examples.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A model judge can help review AI responses at scale, but a score is useful only when you know what it measures and how often the judge gets it wrong. This guide shows how to examine those errors against human-reviewed examples.&lt;/p&gt;
+&lt;h2&gt;Define the decision first&lt;/h2&gt;
+&lt;p&gt;Choose one clear question, such as whether an answer includes a required eligibility condition. Give the judge the relevant source material, the answer being assessed and a criterion it can apply. Decide what a pass, a fail and an uncertain result mean before collecting scores.&lt;/p&gt;
+&lt;p&gt;A model&amp;#x27;s explanation can help a reviewer investigate a decision, but the explanation is not proof that the decision is correct. Check it against the supplied evidence.&lt;/p&gt;
+&lt;h2&gt;Build a reference set&lt;/h2&gt;
+&lt;p&gt;Collect examples that represent the actual task, including common answers, borderline cases and known failures. Have people apply the same written criterion to each item. Use overlapping reviews for a portion of the set, resolve disagreements and record the agreed labels and criterion version.&lt;/p&gt;
+&lt;p&gt;Keep some examples separate for later evaluation when you revise the prompt or select a judge. If you repeatedly tune to the same examples, the measured improvement on that set may not carry over to new cases. Include sensitive or costly mistakes deliberately, while keeping track of how the sample was assembled.&lt;/p&gt;
+&lt;h2&gt;Count both kinds of error&lt;/h2&gt;
+&lt;p&gt;Compare the judge&amp;#x27;s decisions with the agreed human labels. A false pass means the judge passes an answer that reviewers marked as failing. A false fail means it rejects an answer that reviewers marked as passing. Both matter: one can hide defects, while the other can create unnecessary review work.&lt;/p&gt;
+&lt;p&gt;For a simple illustration, suppose reviewers marked 20 answers as failing and the judge passed 4 of those. The false-pass rate among reviewer-labelled failures is 4 out of 20, or 20%. Suppose reviewers marked another 80 answers as passing and the judge rejected 8 of them: the false-fail rate among reviewer-labelled passes is 8 out of 80, or 10%. These are illustrative numbers, not a performance claim.&lt;/p&gt;
+&lt;p&gt;Always report the denominator and the sample period with a rate. A small or unrepresentative sample can make an estimate unstable. Inspect the actual mismatches; a single aggregate number will not show whether errors cluster around missing sources, long answers or a particular kind of question.&lt;/p&gt;
+&lt;h2&gt;Check stability, not just agreement&lt;/h2&gt;
+&lt;p&gt;For pairwise comparisons, repeat a sample with the answer order reversed and inspect decisions that flip. If outputs vary between runs, measure that variation on unchanged inputs before treating a small score movement as a real change. A plausible or longer answer should not receive credit for style when the criterion concerns factual support.&lt;/p&gt;
+&lt;p&gt;Route uncertain cases and the cases where a mistake matters most to a qualified reviewer. Use deterministic checks for properties a program can verify directly, such as whether required JSON fields are present.&lt;/p&gt;
+&lt;h2&gt;Recheck after a change&lt;/h2&gt;
+&lt;p&gt;Record the judge model, instructions, criterion, reference set and evaluation date alongside results. Re-evaluate when any of those inputs or the underlying task changes. For a release decision, examine the judge&amp;#x27;s error patterns and the consequences of mistakes rather than relying on a single threshold alone.&lt;/p&gt;
+&lt;p&gt;Evaluation tools still need criteria and a validation set suited to your own task. See &lt;a href="https://platform.openai.com/docs/guides/evaluation-best-practices"&gt;OpenAI&amp;#x27;s evaluation best practices&lt;/a&gt; for further guidance.&lt;/p&gt;
+&lt;h2&gt;Ailoot · The company and its project portfolio&lt;/h2&gt;
+&lt;p&gt;Ailoot combines established operating experience, a large client base, stable service and ongoing KPI control.&lt;/p&gt;
+&lt;p&gt;The company and its project portfolio: millions of customers; monthly sales in the billions.&lt;/p&gt;
+&lt;p&gt;Ailoot brings that operating experience to API access for AI features in customer products, agents, applications and automations.&lt;/p&gt;
+&lt;p&gt;Originally published on Ailoot: &lt;a href="https://ailoot.ai/blog/en/using-a-model-as-a-judge-and-when-to-trust-the-score/"&gt;How to Measure Errors in an LLM Judge&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Discover &lt;a href="https://ailoot.ai/"&gt;Ailoot’s LLM API&lt;/a&gt;. Ailoot issues its own API key for 1,284 models and variants across 15 categories. It is one of the world’s largest AI routers by model count. The same key covers GPT, Claude, Gemini, Grok, Qwen and DeepSeek, plus Nano Banana for photos, Veo for video, Eleven v4 for speech, Suno for music, Tripo3D for 3D and BGE for search.&lt;/p&gt;
+&lt;p&gt;For LLM evaluation and automated testing, use GPT, Claude, Gemini and DeepSeek through one Ailoot API key. Compare their responses on tasks that matter to your application.&lt;/p&gt;
+&lt;p&gt;Use Ailoot Arena to compare models and agents, or bring Ailoot into an editor, CLI, SDK or automation tool through one of 77 integrations.&lt;/p&gt;
+&lt;p&gt;Ailoot adds new flagship models at launch, and one subscription covers the full catalogue. Find a promo code in your account at &lt;a href="https://ailoot.ai/"&gt;https://ailoot.ai/&lt;/a&gt;. Ailoot subscriptions and promo codes offer up to 50% off official provider API prices.&lt;/p&gt;
+</content:encoded>
+    </item>
+    <item>
       <title>Gemini: Choosing Between the App and the API</title>
       <link>https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100339.md</link>
       <guid isPermaLink="true">https://github.com/provod-ai/ailoot-article-library/blob/published/articles/guide-100339.md</guid>
